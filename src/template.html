@@ -3,9 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Todo List</title>
 </head>
 <body>
-    
+    <nav class="sidebar normal">
+        <div class="heading">
+            <h1>My Todo list</h1>
+        </div>
+        <div class="list-up">
+            <button class="btn-new-task"><span class="icon"></span> New task</button>
+            <ul>
+                <li class="tab-list" id="tab-all">
+                    <a class="tab"><span class="icon"></span>All tasks</a>
+                    <div class="counter">5</div>
+                </li>
+                <li class="tab-list" id="tab-today">
+                    <a class="tab"><span class="icon"></span>Today</a>
+                    <div class="counter"></div>
+                </li>
+                <li class="tab-list" id="tab-upcoming">
+                    <a class="tab"><span class="icon"></span>Upcoming</a>
+                    <div class="counter"></div>
+                </li>
+                <li class="tab-list" id="tab-completed">
+                    <a class="tab"><span class="icon"></span>Completed</a>
+                    <div class="counter"></div>
+                </li>
+            </ul>
+        </div>
+        <div class="list-down">
+            <h2>Projects <button id="btn-new-project" title="New project" type="button"></button></h2>
+            <ul class="projects">
+                <li class="tab-list project">
+                    <a id="studying">Studying</a>
+                    <div class="counter">2</div>
+                    <button class="btn-edit" type="button"></button>
+                </li>
+                <li class="tab-list project">
+                    <a id="home">Home</a>
+                    <div class="counter">8</div>
+                    <button class="btn-edit" type="button"></button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <button class="btn-sidebar normal" id="btn-sidebar" title="Hide/Show sidebar" type="button"></button>
+
+    <dialog class="new-task" id="dialog-new-task">
+        <form id="form-new-task">
+            <input id="input-task-title" type="text" name="title" placeholder="Title" maxlength="50" required>
+            <textarea name="desc" id="input-task-desc"placeholder="Description" rows="4"></textarea>
+
+            <div class="wrapper subtasks">
+                <label for="input-task-subtask">Subtasks:</label>
+
+                <!-- DON'T KNOW HOW TO GET SUBTASKS YET -->
+
+                <ul class="list-subtasks" id="list-task-subtask">
+
+                </ul> 
+                <div class="new-subtask">
+                    <input type="text" id="input-task-subtask" name="new-subtask" placeholder="New subtask" maxlength="50">
+                    <button type="button" class="btn-new-subtask white" id="btn-task-subtask" title="Add new subtask"><span class="icon"></span></button>
+                </div>
+            </div>
+
+            <div class="wrapper date-p">
+                <label for="input-task-date"><span class="icon"></span>Due Date:</label>
+                <input type="date" name="date" name="date" id="input-task-date" required>
+                <label for="select-task-p"><span class="icon"></span>Priority</label>
+                <select name="priority" id="input-task-p">
+                    <option value="p1">Priority 1</option>
+                    <option value="p2">Priority 2</option>
+                    <option value="p3">Priority 3</option>
+                    <option value="p4">Priority 4</option>
+                </select>
+            </div>
+
+            <div class="buttons">
+                <button class="white" id="btn-task-cancel" type="reset">Cancel</button>
+                <button class="orange" id="btn-task-create" type="submit">Create</button>
+            </div>
+        </form>
+    </dialog>
+
+    <main>
+        <div class="header">
+            <h2 class="heading" id="heading"></h2>
+            <div class="buttons">
+                <button type="button" class="btn-new-task orange"><span class="icon"></span> <span class="text">New task</span></button>
+                <button type="button" class="btn-sort white"><span class="icon"></span><span class="text">Sort</span></button>
+                <button type="button" class="btn-filter white"><span class="icon"></span><span class="text">Filter</span></button>
+                <button type="button" class="toggle-theme light" id="btn-toggle-theme"></button>
+            </div>
+        </div>
+        <div class="tasks" id="tasks-container">
+            <div class="task p1">
+                <button type="button" class="checkbox"></button>
+                <div class="left">
+                    <div class="text">
+                        <h3 class="title">Task 1</h3>
+                        <p class="desc">Description of task</p>
+                    </div>
+                    <div class="details">
+                        <div class="date"><span class="icon"></span>Today</div>
+                        <div class="checklist"><span class="icon"></span>1/3</div>
+                    </div>
+                </div>
+
+                <div class="right">
+                    <div class="buttons">
+                        <button type="button" class="btn-edit"></button>
+                        <button type="button" class="btn-delete"></button>
+                    </div>
+                    <div class="from">Studying</div>
+                </div>
+
+            </div>
+
+            <div class="task p2">
+                <button type="button" class="checkbox"></button>
+                <div class="left">
+                    <div class="text">
+                        <h3 class="title">Task 2</h3>
+                        <p class="desc"></p>
+                    </div>
+                    <div class="details">
+                        <div class="date"><span class="icon"></span>Feb 10</div>
+                        <div class="checklist"><span class="icon"></span>1/3</div>
+                    </div>
+                </div>
+
+                <div class="right">
+                    <div class="buttons">
+                        <button type="button" class="btn-edit"></button>
+                        <button type="button" class="btn-delete"></button>
+                    </div>
+                    <div class="from"></div>
+                </div>
+
+            </div>
+        </div>
+    </main>
 </body>
 </html>

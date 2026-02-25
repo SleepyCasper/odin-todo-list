@@ -1,3 +1,45 @@
 :root {
+   --light: hsl(0, 0%, 100%);
+   --light-hover: hsl(27, 0%, 94%);
+   --dark: hsl(240, 3%, 15%);
+   --accent-orange: hsl(27, 100%, 43%);
    
+   --p1: hsl(4, 61.98%, 52.55%);
+   --p2: hsl(33.98, 92.62%, 47.84%);
+   --p3: hsl(216.06, 75.2%, 50.98%);
+   --p4: hsl(0, 0%, 75.69%);
+
+   --p1-bg:hsl(4, 60%, 89%);
+   --p2-bg: hsl(33.98, 60%, 89%);
+   --p3-bg: hsl(216.06, 60%, 89%);
+   --p4-bg: hsl(0, 1%, 89%);
+
+   --light-active: hsl(27, 100%, 94%);
+   --border-grey: hsl(27, 10%, 80%);
+
+   --system-ui: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+   --text-grey: hsl(0, 0%, 29%);
+
+   --sidebar-width: 18rem;
+   --filter-icon-orange: brightness(0) saturate(100%) invert(65%) sepia(80%) saturate(5655%) hue-rotate(7deg) brightness(91%) contrast(101%);
+   --filter-icon-toWhite: invert(1) brightness(2) saturate(50%);
+}
+
+:root.dark {
+   --light: hsl(240, 5%, 15%);
+   --light-hover: hsl(240, 5%, 18%);
+   --dark: hsl(0, 0%, 100%);
+   --accent-orange: hsl(27, 100%, 43%);
+
+   --p1-bg:hsl(4, 57%, 29%);
+   --p2-bg: hsl(33.98, 57%, 29%);
+   --p3-bg: hsl(216.06, 57%, 29%);
+   --p4-bg: hsl(0, 1%, 29%);
+
+   --light-active: hsl(27, 70%, 14%);
+
+   --text-grey: hsl(0, 0%, 85%);
+
+   --filter-icon-orange: brightness(0) saturate(100%) invert(65%) sepia(80%) saturate(5655%) hue-rotate(7deg) brightness(91%) contrast(101%);;
+   --filter-icon-toWhite: invert(1) brightness(2) saturate(50%);
 }
