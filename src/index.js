@@ -1,1 +1,121 @@
 import "./styles/styles.css";
+import { Render } from "./render.js";
+import { Init } from "./init.js";
+import { Task } from "./taskConstructor.js";
+import { TasksStore } from "./tasksStore.js";
+
+const elements = {
+    buttons: {
+        newTask: document.querySelectorAll(".btn-new-task"),
+        newProject: document.getElementById("btn-new-project"),
+        sidebar: document.getElementById("btn-sidebar"),
+        toggleTheme: document.getElementById("btn-toggle-theme"),
+    },
+    tabs: {
+        allTasks: document.getElementById("tab-all"),
+        today: document.getElementById("tab-today"),
+        upcoming: document.getElementById("tab-upcoming"),
+        completed: document.getElementById("tab-completed"),
+    },
+    formNewTask: {
+        form: document.getElementById("form-new-task"),
+        dialog: document.getElementById("dialog-new-task"),
+        inputTitle: document.getElementById("input-task-title"),
+        inputDesc: document.getElementById("input-task-desc"),
+        inputSubtask: document.getElementById("input-task-subtask"),
+        btnNewSubtask: document.getElementById("btn-task-subtask"),
+        listSubtasks: document.getElementById("list-task-subtask"),
+        btnCreate: document.getElementById("btn-task-create"),
+        btnCancel: document.getElementById("btn-task-cancel"),
+    },
+    projects: document.querySelectorAll(".project"),
+    counters: document.querySelectorAll(".counter"),
+    sidebar: document.querySelector(".sidebar"),
+    heading: document.getElementById("heading"),
+    tasks: document.getElementById("tasks-container"),
+}
+
+const allTabs = [...Object.values(elements.tabs), ...elements.projects];
+const allNewTaskInputs = [
+    elements.formNewTask.inputTitle,
+    elements.formNewTask.inputDesc,
+    elements.formNewTask.inputSubtask
+];
+
+const EventHandler = (function(){
+    allTabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+            Render.renderSidebar(tab, allTabs);
+            Render.renderHeading(elements.heading);
+        });
+    });
+
+    elements.buttons.sidebar.addEventListener("click", () => 
+        Render.toggleSidebar(elements.sidebar, elements.buttons.sidebar));
+
+    elements.buttons.toggleTheme.addEventListener("click", () => 
+        Render.toggleTheme(elements.buttons.toggleTheme));
+
+    elements.buttons.newTask.forEach(btn => {
+        btn.addEventListener("click", () => {
+            elements.formNewTask.dialog.showModal()
+        });
+    });
+
+    elements.formNewTask.btnNewSubtask.addEventListener("click", () => {
+        if(elements.formNewTask.inputSubtask.value) {
+            Render.renderSubtaskList(elements.formNewTask.listSubtasks, elements.formNewTask.inputSubtask);
+            elements.formNewTask.inputSubtask.value = "";
+        } else {return}
+    });
+
+    elements.formNewTask.listSubtasks.addEventListener("click", (e) => {
+        const li = e.target.closest("li")
+        const checkbox = e.target.closest("input[type='checkbox']");
+        const btnDelete = e.target.closest(".btn-delete-subtask");
+
+        if (checkbox) {
+            const label = li.querySelector("label");
+            if (label) label.classList.toggle("checked", checkbox.checked);
+        }
+
+        if (btnDelete) {
+            li.remove();
+        }
+    })
+
+    elements.formNewTask.form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const newTask = createNewTask();
+        Render.renderTask(elements.tasks, newTask);
+        Render.closeDialog(elements.formNewTask.dialog, Render.resetNewTaskDialog(allNewTaskInputs, elements.formNewTask.listSubtasks))
+        console.log(TasksStore.tasks);
+    });
+
+    elements.formNewTask.btnCancel.addEventListener("click", () => 
+        Render.closeDialog(elements.formNewTask.dialog, Render.resetNewTaskDialog(allNewTaskInputs, elements.formNewTask.listSubtasks)));
+
+})();
+
+function createNewTask() {
+    const formData = new FormData(elements.formNewTask.form);
+    const subtasks = [...elements.formNewTask.listSubtasks.querySelectorAll("li")]
+        .map(li => ({
+            text: li.querySelector("label").textContent,
+            done: li.querySelector("input").checked
+        }));
+
+    const newTask = new Task(
+        formData.get("title"),
+        formData.get("desc"),
+        formData.get("date"),
+        formData.get("priority"),
+        subtasks
+        );
+
+    TasksStore.add(newTask);
+    return newTask;
+}
+
+Init.run(allTabs, elements);
+
