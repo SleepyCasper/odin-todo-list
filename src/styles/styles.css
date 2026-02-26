@@ -102,14 +102,14 @@ html {
 }
 
 html.dark :is(.list-down button,
-            .sidebar .icon,
+            .sidebar .icon:not(.icon-colored),
             .btn-sidebar,
             .task .right button
             ) {
     filter: var(--filter-icon-toWhite);
 }
 
-html.dark :is(.active .tab .icon,
+html.dark :is(.active .tab .icon:not(.icon-colored),
 .btn-sidebar:hover) {
     filter: var(--filter-icon-orange);
 }
@@ -181,6 +181,7 @@ button.orange {
 }
 
 .icon {
+    display: inline-block;
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -276,7 +277,7 @@ nav.collapsed {
 .list-up li,
 .list-down li,
 .list-down h2 {
-    border-radius: 0.3rem;
+    border-radius: 0.5rem;
 }
 
 .list-up button:not(.active):hover,
@@ -317,13 +318,7 @@ nav.collapsed {
     width: 1.3rem;
 }
 
-.tab .icon,
-.header .icon,
-.task .icon {
-    display: inline-block;
-}
-
-.active .tab .icon {
+.active .tab .icon:not(.colored ) {
     filter: var(--filter-icon-orange);
 }
 
@@ -369,6 +364,11 @@ nav.collapsed {
 
 .project {
     position: relative;
+}
+
+.project svg {
+    height: 1rem;
+    width: 1rem;
 }
 
 .project .btn-edit {

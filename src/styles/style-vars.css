@@ -17,6 +17,19 @@
    --light-active: hsl(27, 100%, 94%);
    --border-grey: hsl(27, 10%, 80%);
 
+   --prj-blue: hsl(226, 70%, 60%);
+   --prj-cyan: hsl(178, 64%, 60%);
+   --prj-yellow: hsl(57, 70%, 60%);
+   --prj-red: hsl(0, 70%, 60%);
+   --prj-green: hsl(123, 70%, 60%);
+   --prj-purple: hsl(280, 70%, 60%);
+   --prj-orange: hsl(26, 70%, 60%);
+   --prj-grey: hsl(0, 0%, 60%);
+   --prj-black: hsl(0, 0%, 6%);
+   --prj-brown: hsl(24, 43%, 39%);
+   --prj-pink: hsl(318, 64%, 60%);
+
+
    --system-ui: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
    --text-grey: hsl(0, 0%, 29%);
 

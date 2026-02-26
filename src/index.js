@@ -3,6 +3,13 @@ import { Render } from "./render.js";
 import { Init } from "./init.js";
 import { Task } from "./taskConstructor.js";
 import { TasksStore } from "./tasksStore.js";
+import { Project } from "./prjConstructor.js";
+import { ProjectsStore } from "./projectsStore.js";
+
+// TODO 1. eventListener on edit project
+// TODO 2. add choose project in new task dialog
+// TODO 3. project visibility in task card
+// TODO 4. track on subtasks
 
 const elements = {
     buttons: {
@@ -16,6 +23,7 @@ const elements = {
         today: document.getElementById("tab-today"),
         upcoming: document.getElementById("tab-upcoming"),
         completed: document.getElementById("tab-completed"),
+        projects: document.getElementById("tab-projects"),
     },
     formNewTask: {
         form: document.getElementById("form-new-task"),
@@ -27,6 +35,15 @@ const elements = {
         listSubtasks: document.getElementById("list-task-subtask"),
         btnCreate: document.getElementById("btn-task-create"),
         btnCancel: document.getElementById("btn-task-cancel"),
+    },
+    formNewProject: {
+        form: document.getElementById("form-new-project"),
+        dialog: document.getElementById("dialog-new-project"),
+        inputTitle: document.getElementById("input-project-title"),
+        inputColorHidden: document.getElementById("selected-color-value"),
+        customSelectDropdown: document.getElementById("btn-dropdown-custom"),
+        customColorOptions: document.querySelectorAll("#list-select-custom li"),
+        btnCancel: document.getElementById("btn-project-cancel"),
     },
     projects: document.querySelectorAll(".project"),
     counters: document.querySelectorAll(".counter"),
@@ -41,6 +58,11 @@ const allNewTaskInputs = [
     elements.formNewTask.inputDesc,
     elements.formNewTask.inputSubtask
 ];
+
+const allNewPrjInputs = [
+    elements.formNewProject.inputTitle,
+    elements.formNewProject.inputColorHidden
+]
 
 const EventHandler = (function(){
     allTabs.forEach(tab => {
@@ -61,6 +83,10 @@ const EventHandler = (function(){
             elements.formNewTask.dialog.showModal()
         });
     });
+
+    elements.buttons.newProject.addEventListener("click", () => elements.formNewProject.dialog.showModal());
+
+    // NEW TASK DIALOG
 
     elements.formNewTask.btnNewSubtask.addEventListener("click", () => {
         if(elements.formNewTask.inputSubtask.value) {
@@ -95,6 +121,31 @@ const EventHandler = (function(){
     elements.formNewTask.btnCancel.addEventListener("click", () => 
         Render.closeDialog(elements.formNewTask.dialog, Render.resetNewTaskDialog(allNewTaskInputs, elements.formNewTask.listSubtasks)));
 
+    // NEW PROJECT DIALOG
+
+    elements.formNewProject.customSelectDropdown.addEventListener("click", () => {
+        Render.renderPrjColorOption();
+    })
+
+    elements.formNewProject.customColorOptions.forEach(option => {
+        option.addEventListener("click", () => {
+            setColorValue(option);
+            Render.updatePrjColorOption(option.getAttribute('data-value'), elements.formNewProject.customSelectDropdown);
+            Render.renderPrjColorOption();
+        })
+    })
+
+    elements.formNewProject.btnCancel.addEventListener("click", () => {
+        Render.closeDialog(elements.formNewProject.dialog, Render.resetNewPrjDialog(allNewPrjInputs, elements.formNewProject.customSelectDropdown));
+    })
+
+    elements.formNewProject.form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const newPrj = createNewProject();
+        Render.renderTabPrj(elements.tabs.projects, newPrj);
+        Render.closeDialog(elements.formNewProject.dialog, Render.resetNewPrjDialog(allNewPrjInputs, elements.formNewProject.customSelectDropdown));
+        console.log(ProjectsStore.getProjects());
+    })
 })();
 
 function createNewTask() {
@@ -104,17 +155,34 @@ function createNewTask() {
             text: li.querySelector("label").textContent,
             done: li.querySelector("input").checked
         }));
-
+    
     const newTask = new Task(
         formData.get("title"),
         formData.get("desc"),
         formData.get("date"),
         formData.get("priority"),
-        subtasks
+        subtasks,
         );
 
     TasksStore.add(newTask);
     return newTask;
+}
+
+function createNewProject() {
+    const formPrjData = new FormData(elements.formNewProject.form);
+
+    const newProject = new Project (
+        formPrjData.get("title"),
+        formPrjData.get("project-color"),
+    );
+
+    ProjectsStore.add(newProject);
+    return newProject;
+}
+
+function setColorValue(option) {
+    elements.formNewProject.inputColorHidden.value = option.getAttribute("data-value");
+    console.log(elements.formNewProject.inputColorHidden.value);
 }
 
 Init.run(allTabs, elements);

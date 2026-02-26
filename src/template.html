@@ -33,14 +33,34 @@
         </div>
         <div class="list-down">
             <h2>Projects <button id="btn-new-project" title="New project" type="button"></button></h2>
-            <ul class="projects">
-                <li class="tab-list project">
-                    <a id="studying">Studying</a>
+            <ul class="projects" id="tab-projects">
+                <li class="tab-list project colored">
+                    <a id="studying" class="tab">
+                        <span class="icon">
+                            <svg style="fill: var(--prj-black)" width="800px" height="800px" viewBox="0 0 24.00 24.00" id="meteor-icon-kit__solid-view-grid" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                            <g id="SVGRepo_iconCarrier">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M2 0H9C10.1046 0 11 0.89543 11 2V9C11 10.1046 10.1046 11 9 11H2C0.89543 11 0 10.1046 0 9V2C0 0.89543 0.89543 0 2 0ZM15 0H22C23.1046 0 24 0.89543 24 2V9C24 10.1046 23.1046 11 22 11H15C13.8954 11 13 10.1046 13 9V2C13 0.89543 13.8954 0 15 0ZM2 13H9C10.1046 13 11 13.8954 11 15V22C11 23.1046 10.1046 24 9 24H2C0.89543 24 0 23.1046 0 22V15C0 13.8954 0.89543 13 2 13ZM15 13H22C23.1046 13 24 13.8954 24 15V22C24 23.1046 23.1046 24 22 24H15C13.8954 24 13 23.1046 13 22V15C13 13.8954 13.8954 13 15 13Z"/>
+                            </g>
+                            </svg>
+                        </span>Studying
+                    </a>
                     <div class="counter">2</div>
                     <button class="btn-edit" type="button"></button>
                 </li>
                 <li class="tab-list project">
-                    <a id="home">Home</a>
+                    <a id="home" class="tab">
+                        <span class="icon">
+                            <svg style="fill: var(--prj-black)" width="800px" height="800px" viewBox="0 0 24.00 24.00" id="meteor-icon-kit__solid-view-grid" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                            <g id="SVGRepo_iconCarrier">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M2 0H9C10.1046 0 11 0.89543 11 2V9C11 10.1046 10.1046 11 9 11H2C0.89543 11 0 10.1046 0 9V2C0 0.89543 0.89543 0 2 0ZM15 0H22C23.1046 0 24 0.89543 24 2V9C24 10.1046 23.1046 11 22 11H15C13.8954 11 13 10.1046 13 9V2C13 0.89543 13.8954 0 15 0ZM2 13H9C10.1046 13 11 13.8954 11 15V22C11 23.1046 10.1046 24 9 24H2C0.89543 24 0 23.1046 0 22V15C0 13.8954 0.89543 13 2 13ZM15 13H22C23.1046 13 24 13.8954 24 15V22C24 23.1046 23.1046 24 22 24H15C13.8954 24 13 23.1046 13 22V15C13 13.8954 13.8954 13 15 13Z"/>
+                            </g>
+                            </svg>
+                        </span>Home
+                    </a>
                     <div class="counter">8</div>
                     <button class="btn-edit" type="button"></button>
                 </li>
@@ -51,14 +71,13 @@
     <button class="btn-sidebar normal" id="btn-sidebar" title="Hide/Show sidebar" type="button"></button>
 
     <dialog class="new-task" id="dialog-new-task">
+        <h3>New task</h3>
         <form id="form-new-task">
             <input id="input-task-title" type="text" name="title" placeholder="Title" maxlength="50" required>
             <textarea name="desc" id="input-task-desc"placeholder="Description" rows="4"></textarea>
 
             <div class="wrapper subtasks">
                 <label for="input-task-subtask">Subtasks:</label>
-
-                <!-- DON'T KNOW HOW TO GET SUBTASKS YET -->
 
                 <ul class="list-subtasks" id="list-task-subtask">
 
@@ -85,6 +104,64 @@
                 <button class="white" id="btn-task-cancel" type="reset">Cancel</button>
                 <button class="orange" id="btn-task-create" type="submit">Create</button>
             </div>
+        </form>
+    </dialog>
+
+    <dialog class="new-project" id="dialog-new-project">
+        <h3>New project</h3>
+        <form id="form-new-project">
+            <input type="text" name="title" id="input-project-title" placeholder="Project title">
+
+            <input type="hidden" name="project-color" id="selected-color-value" value="black">
+
+            <div class="select-color-custom" id="select-color-custom">
+                <h4>Color</h4>
+                <button type="button" class="select-button" id="btn-dropdown-custom">
+                    <span class="icon" style="background-color: var(--prj-black)"></span>
+                    <span class="text">Black</span>
+                </button>
+
+                <ul class="list-select-custom" id="list-select-custom">
+                    <li data-value="black">
+                        <span class="icon" style="background-color: var(--prj-black)"></span> Black
+                    </li>
+                    <li data-value="grey">
+                        <span class="icon" style="background-color: var(--prj-grey)"></span> Grey
+                    </li>
+                    <li data-value="brown">
+                        <span class="icon" style="background-color: var(--prj-brown)"></span> Brown
+                    </li>
+                    <li data-value="red">
+                        <span class="icon" style="background-color: var(--prj-red)"></span> Red
+                    </li>
+                    <li data-value="orange">
+                        <span class="icon" style="background-color: var(--prj-orange)"></span> Orange
+                    </li>
+                    <li data-value="yellow">
+                        <span class="icon" style="background-color: var(--prj-yellow)"></span> Yellow
+                    </li>
+                    <li data-value="green">
+                        <span class="icon" style="background-color: var(--prj-green)"></span> Green
+                    </li>
+                    <li data-value="cyan">
+                        <span class="icon" style="background-color: var(--prj-cyan)"></span> Cyan
+                    </li>
+                    <li data-value="blue">
+                        <span class="icon" style="background-color: var(--prj-blue)"></span> Blue
+                    </li>
+                    <li data-value="purple">
+                        <span class="icon" style="background-color: var(--prj-purple)"></span> Purple
+                    </li>
+                    <li data-value="pink">
+                        <span class="icon" style="background-color: var(--prj-pink)"></span> Pink
+                    </li>
+                    </ul>
+            </div>
+
+            <div class="buttons">
+                <button class="white" id="btn-project-cancel" type="reset">Cancel</button>
+                <button class="orange" id="btn-project-create" type="submit">Create</button>
+            </div>            
         </form>
     </dialog>
 
