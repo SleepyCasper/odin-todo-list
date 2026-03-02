@@ -17,14 +17,15 @@ const elements = {
         newProject: document.getElementById("btn-new-project"),
         sidebar: document.getElementById("btn-sidebar"),
         toggleTheme: document.getElementById("btn-toggle-theme"),
+        editProject: document.querySelectorAll(".btn-edit-project"),
     },
     tabs: {
         allTasks: document.getElementById("tab-all"),
         today: document.getElementById("tab-today"),
         upcoming: document.getElementById("tab-upcoming"),
         completed: document.getElementById("tab-completed"),
-        projects: document.getElementById("tab-projects"),
     },
+    tabProjects: document.getElementById("tab-projects"),
     formNewTask: {
         form: document.getElementById("form-new-task"),
         dialog: document.getElementById("dialog-new-task"),
@@ -44,6 +45,7 @@ const elements = {
         customSelectDropdown: document.getElementById("btn-dropdown-custom"),
         customColorOptions: document.querySelectorAll("#list-select-custom li"),
         btnCancel: document.getElementById("btn-project-cancel"),
+        btnCreate: document.getElementById("btn-project-create"),
     },
     projects: document.querySelectorAll(".project"),
     counters: document.querySelectorAll(".counter"),
@@ -65,12 +67,40 @@ const allNewPrjInputs = [
 ]
 
 const EventHandler = (function(){
-    allTabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-            Render.renderSidebar(tab, allTabs);
-            Render.renderHeading(elements.heading);
-        });
+    document.querySelector(".sidebar").addEventListener("click", (e) => {
+        const tabItem = e.target.closest(".tab-list");
+        if (!tabItem) return;
+        const allTabItems = document.querySelectorAll(".tab-list");
+        allTabItems.forEach(el => el.classList.remove("active"));
+        tabItem.classList.add("active");
+        sessionStorage.setItem("activeTab", tabItem.dataset.id);
+        Render.renderHeading(elements.heading);
     });
+
+    // Edit project button event listener:
+    let editingProjectId = null;
+    
+    elements.tabProjects.addEventListener("click", (e) => {
+        const editBtn = e.target.closest(".btn-edit-project");
+        if (!editBtn) return;
+
+        const li = editBtn.closest("[data-id]");
+        const projectId = li?.dataset.id;
+        console.log(editBtn, "is clicked");
+
+        const project = ProjectsStore.getById(projectId);
+        console.log("Edit project:", project);
+        if (!project) return;
+
+        editingProjectId = project.id; 
+
+        //Changing dialog
+        elements.formNewProject.inputTitle.value = project.title;
+        elements.formNewProject.btnCreate.textContent = "Update";
+        Render.updatePrjColorOption(project.color, elements.formNewProject.customSelectDropdown);
+        elements.formNewProject.inputColorHidden.value = project.color;
+        elements.formNewProject.dialog.showModal()
+    })
 
     elements.buttons.sidebar.addEventListener("click", () => 
         Render.toggleSidebar(elements.sidebar, elements.buttons.sidebar));
@@ -85,6 +115,7 @@ const EventHandler = (function(){
     });
 
     elements.buttons.newProject.addEventListener("click", () => elements.formNewProject.dialog.showModal());
+
 
     // NEW TASK DIALOG
 
@@ -141,9 +172,26 @@ const EventHandler = (function(){
 
     elements.formNewProject.form.addEventListener("submit", (e) => {
         e.preventDefault();
-        const newPrj = createNewProject();
-        Render.renderTabPrj(elements.tabs.projects, newPrj);
+        const formData = new FormData(elements.formNewProject.form);
+
+        if (editingProjectId) {
+            // UPDATE existing project
+            ProjectsStore.update(editingProjectId, {
+                title: formData.get("title"),
+                color: formData.get("project-color"),
+            });
+            const li = document.querySelector(`[data-id="${editingProjectId}"]`);
+            Render.updateTabPrj(li, ProjectsStore.getById(editingProjectId)); // re-render the li
+            editingProjectId = null;
+        } else {
+            // CREATE new project
+            const newPrj = createNewProject();
+            Render.renderTabPrj(elements.tabProjects, newPrj);
+        }
+
         Render.closeDialog(elements.formNewProject.dialog, Render.resetNewPrjDialog(allNewPrjInputs, elements.formNewProject.customSelectDropdown));
+        elements.formNewProject.btnCreate.textContent = "Create";
+        Render.renderHeading(elements.heading);
         console.log(ProjectsStore.getProjects());
     })
 })();
@@ -185,5 +233,6 @@ function setColorValue(option) {
     console.log(elements.formNewProject.inputColorHidden.value);
 }
 
-Init.run(allTabs, elements);
+
+Init.run(allTabs, elements.heading, elements.tabProjects);
 

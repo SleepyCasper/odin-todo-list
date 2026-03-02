@@ -109,7 +109,7 @@ html.dark :is(.list-down button,
     filter: var(--filter-icon-toWhite);
 }
 
-html.dark :is(.active .tab .icon:not(.icon-colored),
+html.dark :is(.active .tab .icon:not(.project .icon),
 .btn-sidebar:hover) {
     filter: var(--filter-icon-orange);
 }
@@ -318,7 +318,7 @@ nav.collapsed {
     width: 1.3rem;
 }
 
-.active .tab .icon:not(.colored ) {
+.active .tab .icon:not(.project .icon ) {
     filter: var(--filter-icon-orange);
 }
 
@@ -371,7 +371,7 @@ nav.collapsed {
     width: 1rem;
 }
 
-.project .btn-edit {
+.project .btn-edit-project {
     position: absolute;
     right: 0.4rem;
     top: 0.3rem;
@@ -382,11 +382,11 @@ nav.collapsed {
     opacity: 0;
 }
 
-.project:hover .btn-edit {
+.project:hover .btn-edit-project {
     opacity: 1;
 }
 
-.project.active:hover .btn-edit {
+.project.active:hover .btn-edit-project {
     filter: var(--filter-icon-orange);
 }
 

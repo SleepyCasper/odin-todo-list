@@ -1,22 +1,24 @@
 import { capitalizeFirstLetter, uncapitalizeFirstLetter } from "./util.js";
-
+    
 export const Render = (function() {
     function renderSidebar(element, allElements) {
         Object.values(allElements).forEach(el => el.classList.remove("active"));
         element.classList.add("active");
-        sessionStorage.setItem("activeTab", element.id);
+        sessionStorage.setItem("activeTab", element.dataset.id || element.id);
     }
 
     function renderTabPrj(listProjects, newProject) {
         const project = document.createElement("li");
-        const id = uncapitalizeFirstLetter(newProject.title);
         project.classList.add("tab-list");
         project.classList.add("project");
+        project.setAttribute("data-id", newProject.id);
+
         if (newProject.color !== "black") {
-            project.classList.add("colored");
+            project.classList.add("colored"); 
         }
+
         project.innerHTML = `
-            <a id="${id}" class="tab">
+            <a class="tab">
             <span class="icon">
                 <svg style="fill: var(--prj-${newProject.color})" width="800px" height="800px" viewBox="0 0 24.00 24.00" id="meteor-icon-kit__solid-view-grid" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"/>
@@ -27,9 +29,22 @@ export const Render = (function() {
                 </svg>
             </span>${newProject.title}</a>
             <div class="counter"></div>
-            <button class="btn-edit" type="button"></button>
+            <button class="btn-edit-project" type="button"></button>
         `
         listProjects.appendChild(project);
+    }
+
+    function updateTabPrj(li, project) {
+        li.querySelector(".tab").innerHTML = `
+            <span class="icon">
+                <svg style="fill: var(--prj-${project.color})" width="800px" height="800px" viewBox="0 0 24.00 24.00" id="meteor-icon-kit__solid-view-grid" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                <g id="SVGRepo_iconCarrier">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 0H9C10.1046 0 11 0.89543 11 2V9C11 10.1046 10.1046 11 9 11H2C0.89543 11 0 10.1046 0 9V2C0 0.89543 0.89543 0 2 0ZM15 0H22C23.1046 0 24 0.89543 24 2V9C24 10.1046 23.1046 11 22 11H15C13.8954 11 13 10.1046 13 9V2C13 0.89543 13.8954 0 15 0ZM2 13H9C10.1046 13 11 13.8954 11 15V22C11 23.1046 10.1046 24 9 24H2C0.89543 24 0 23.1046 0 22V15C0 13.8954 0.89543 13 2 13ZM15 13H22C23.1046 13 24 13.8954 24 15V22C24 23.1046 23.1046 24 22 24H15C13.8954 24 13 23.1046 13 22V15C13 13.8954 13.8954 13 15 13Z"/>
+                </g>
+                </svg>
+            </span>${project.title}`;
     }
 
     function renderPrjColorOption() {
@@ -47,6 +62,7 @@ export const Render = (function() {
 
     function renderHeading(heading) {
        let activeTab = document.querySelector(".tab-list.active > .tab");
+       /* console.log(activeTab.textContent); */
        return heading.textContent = activeTab.textContent;
     }
 
@@ -161,5 +177,6 @@ export const Render = (function() {
         updatePrjColorOption,
         resetNewPrjDialog,
         renderTabPrj,
+        updateTabPrj,
     }
 })();
