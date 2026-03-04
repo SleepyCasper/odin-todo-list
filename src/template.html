@@ -34,7 +34,7 @@
         <div class="list-down">
             <h2>Projects <button id="btn-new-project" title="New project" type="button"></button></h2>
             <ul class="projects" id="tab-projects">
-                
+            
             </ul>
         </div>
     </nav>
@@ -71,6 +71,13 @@
                 </select>
             </div>
 
+            <div class="wrapper project">
+                <label for="select-project">Project:</label>
+                <select name="project" id="select-project">
+
+                </select>
+            </div>
+
             <div class="buttons">
                 <button class="white" id="btn-task-cancel" type="reset">Cancel</button>
                 <button class="orange" id="btn-task-create" type="submit">Create</button>
@@ -81,7 +88,7 @@
     <dialog class="new-project" id="dialog-new-project">
         <h3>New project</h3>
         <form id="form-new-project">
-            <input type="text" name="title" id="input-project-title" placeholder="Project title">
+            <input type="text" name="title" id="input-project-title" placeholder="Project title" maxlength="18" required>
 
             <input type="hidden" name="project-color" id="selected-color-value" value="black">
 
@@ -136,6 +143,14 @@
         </form>
     </dialog>
 
+    <dialog class="delete-project" id="dialog-delete-project">
+        <p>Are you sure you want to delete the project and all tasks within?</p>
+        <div class="buttons">
+            <button class="white" id="btn-delete-project-cancel" type="button">Cancel</button>
+            <button class="orange" id="btn-delete-project-delete" type="button">Delete</button>
+        </div>  
+    </dialog>
+
     <main>
         <div class="header">
             <h2 class="heading" id="heading"></h2>
@@ -147,51 +162,51 @@
             </div>
         </div>
         <div class="tasks" id="tasks-container">
-            <div class="task p1">
-                <button type="button" class="checkbox"></button>
-                <div class="left">
-                    <div class="text">
-                        <h3 class="title">Task 1</h3>
-                        <p class="desc">Description of task</p>
-                    </div>
-                    <div class="details">
-                        <div class="date"><span class="icon"></span>Today</div>
-                        <div class="checklist"><span class="icon"></span>1/3</div>
-                    </div>
-                </div>
-
-                <div class="right">
-                    <div class="buttons">
-                        <button type="button" class="btn-edit"></button>
-                        <button type="button" class="btn-delete"></button>
-                    </div>
-                    <div class="from">Studying</div>
-                </div>
-
-            </div>
-
-            <div class="task p2">
-                <button type="button" class="checkbox"></button>
-                <div class="left">
-                    <div class="text">
-                        <h3 class="title">Task 2</h3>
-                        <p class="desc"></p>
-                    </div>
-                    <div class="details">
-                        <div class="date"><span class="icon"></span>Feb 10</div>
-                        <div class="checklist"><span class="icon"></span>1/3</div>
-                    </div>
-                </div>
-
-                <div class="right">
-                    <div class="buttons">
-                        <button type="button" class="btn-edit"></button>
-                        <button type="button" class="btn-delete"></button>
-                    </div>
-                    <div class="from"></div>
-                </div>
-
-            </div>
+            <!-- <div class="task p1"> -->
+                <!-- <button type="button" class="checkbox"></button> -->
+                <!-- <div class="left"> -->
+                    <!-- <div class="text"> -->
+                        <!-- <h3 class="title">Task 1</h3> -->
+                        <!-- <p class="desc">Description of task</p> -->
+                    <!-- </div> -->
+                    <!-- <div class="details"> -->
+                        <!-- <div class="date"><span class="icon"></span>Today</div> -->
+                        <!-- <div class="checklist"><span class="icon"></span>1/3</div> -->
+                    <!-- </div> -->
+                <!-- </div> -->
+<!--  -->
+                <!-- <div class="right"> -->
+                    <!-- <div class="buttons"> -->
+                        <!-- <button type="button" class="btn-edit"></button> -->
+                        <!-- <button type="button" class="btn-delete"></button> -->
+                    <!-- </div> -->
+                    <!-- <div class="from">Studying</div> -->
+                <!-- </div> -->
+<!--  -->
+            <!-- </div> -->
+<!--  -->
+            <!-- <div class="task p2"> -->
+                <!-- <button type="button" class="checkbox"></button> -->
+                <!-- <div class="left"> -->
+                    <!-- <div class="text"> -->
+                        <!-- <h3 class="title">Task 2</h3> -->
+                        <!-- <p class="desc"></p> -->
+                    <!-- </div> -->
+                    <!-- <div class="details"> -->
+                        <!-- <div class="date"><span class="icon"></span>Feb 10</div> -->
+                        <!-- <div class="checklist"><span class="icon"></span>1/3</div> -->
+                    <!-- </div> -->
+                <!-- </div> -->
+<!--  -->
+                <!-- <div class="right"> -->
+                    <!-- <div class="buttons"> -->
+                        <!-- <button type="button" class="btn-edit"></button> -->
+                        <!-- <button type="button" class="btn-delete"></button> -->
+                    <!-- </div> -->
+                    <!-- <div class="from"></div> -->
+                <!-- </div> -->
+<!--  -->
+            <!-- </div> -->
         </div>
     </main>
 </body>

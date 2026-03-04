@@ -2,7 +2,7 @@ export class Task {
     #id;
     #dateAdded;
 
-    constructor(title, desc, dueDate, priority, subtasks, project) {
+    constructor(title, desc, dueDate, priority, subtasks, project, projectID) {
         this.#id = crypto.randomUUID();
         this.#dateAdded = new Date();
 
@@ -15,12 +15,23 @@ export class Task {
         } else {
             this.subtasks = null;
         }
-        if(project) {
-            this.project = project;
-        }   else {
+        if(project === "no-project") {
             this.project = null;
+            this.projectID = null;
+        } else {
+            this.project = project;
+            this.projectID = projectID;
         }
     }
 
     get id() { return this.#id; }
+
+    get subtasksLength() {
+        return this.subtasks.length;
+    }
+
+    get subtasksDoneLength() {
+        let doneSubtasks = this.subtasks.filter( subtask => subtask.done === true);
+        return doneSubtasks.length;
+    }
 } 

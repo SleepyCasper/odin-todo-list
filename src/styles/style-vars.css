@@ -32,6 +32,7 @@
 
    --system-ui: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
    --text-grey: hsl(0, 0%, 29%);
+   --box-shadow: 0 0 12px 1px hsl(0, 0%, 82%);
 
    --sidebar-width: 18rem;
    --filter-icon-orange: brightness(0) saturate(100%) invert(65%) sepia(80%) saturate(5655%) hue-rotate(7deg) brightness(91%) contrast(101%);
@@ -52,6 +53,7 @@
    --light-active: hsl(27, 70%, 14%);
 
    --text-grey: hsl(0, 0%, 85%);
+   --box-shadow: 0 0 12px 1px hsl(0, 0%, 9%);
 
    --filter-icon-orange: brightness(0) saturate(100%) invert(65%) sepia(80%) saturate(5655%) hue-rotate(7deg) brightness(91%) contrast(101%);;
    --filter-icon-toWhite: invert(1) brightness(2) saturate(50%);

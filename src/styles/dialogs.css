@@ -207,11 +207,7 @@ dialog.new-project {
     overflow-x: hidden;
     isolation: isolate;
     border-radius: 0.5rem;
-    box-shadow: 0 0 12px 1px hsl(0, 0%, 82%);
-}
-
-html.dark .list-select-custom {
-    box-shadow: 0 0 12px 1px hsl(0, 0%, 9%);
+    box-shadow: var(--box-shadow);
 }
 
 .list-select-custom.expanded {

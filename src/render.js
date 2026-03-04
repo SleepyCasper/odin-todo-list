@@ -1,5 +1,6 @@
 import { capitalizeFirstLetter, uncapitalizeFirstLetter } from "./util.js";
-    
+import { ProjectsStore } from "./projectsStore.js";
+
 export const Render = (function() {
     function renderSidebar(element, allElements) {
         Object.values(allElements).forEach(el => el.classList.remove("active"));
@@ -13,10 +14,6 @@ export const Render = (function() {
         project.classList.add("project");
         project.setAttribute("data-id", newProject.id);
 
-        if (newProject.color !== "black") {
-            project.classList.add("colored"); 
-        }
-
         project.innerHTML = `
             <a class="tab">
             <span class="icon">
@@ -28,14 +25,22 @@ export const Render = (function() {
                 </g>
                 </svg>
             </span>${newProject.title}</a>
-            <div class="counter"></div>
-            <button class="btn-edit-project" type="button"></button>
-        `
+            <div class="counter">${newProject.tasks.length}</div>
+            <button class="btn-details" type="button"></button>
+            <div class="details">
+                <div class="btn-edit"><span class="icon"></span>Edit</div>
+                <div class="btn-delete"><span class="icon"></span>Delete</div>
+            </div>        `
         listProjects.appendChild(project);
+
+        if (newProject.tasks.length === 0) {
+            project.querySelector(".counter").style = "opacity: 0";
+        }
     }
 
     function updateTabPrj(li, project) {
-        li.querySelector(".tab").innerHTML = `
+        li.innerHTML = `
+            <a class="tab">
             <span class="icon">
                 <svg style="fill: var(--prj-${project.color})" width="800px" height="800px" viewBox="0 0 24.00 24.00" id="meteor-icon-kit__solid-view-grid" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"/>
@@ -44,7 +49,17 @@ export const Render = (function() {
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M2 0H9C10.1046 0 11 0.89543 11 2V9C11 10.1046 10.1046 11 9 11H2C0.89543 11 0 10.1046 0 9V2C0 0.89543 0.89543 0 2 0ZM15 0H22C23.1046 0 24 0.89543 24 2V9C24 10.1046 23.1046 11 22 11H15C13.8954 11 13 10.1046 13 9V2C13 0.89543 13.8954 0 15 0ZM2 13H9C10.1046 13 11 13.8954 11 15V22C11 23.1046 10.1046 24 9 24H2C0.89543 24 0 23.1046 0 22V15C0 13.8954 0.89543 13 2 13ZM15 13H22C23.1046 13 24 13.8954 24 15V22C24 23.1046 23.1046 24 22 24H15C13.8954 24 13 23.1046 13 22V15C13 13.8954 13.8954 13 15 13Z"/>
                 </g>
                 </svg>
-            </span>${project.title}`;
+            </span>${project.title}</a>
+            <div class="counter">${project.tasks.length}</div>
+            <button class="btn-details" type="button"></button>
+            <div class="details">
+                <div class="btn-edit"><span class="icon"></span>Edit</div>
+                <div class="btn-delete"><span class="icon"></span>Delete</div>
+            </div>`;
+
+        if (project.tasks.length === 0) {
+            li.querySelector(".counter").style = "opacity: 0";
+        }
     }
 
     function renderPrjColorOption() {
@@ -111,6 +126,33 @@ export const Render = (function() {
         list.appendChild(subtask);
     }
 
+    function renderPrjOptions (select) {
+        const projects = ProjectsStore.getProjects();
+        console.log("Projects array:", projects);
+
+        const options = projects.map(prj => {
+            const option = document.createElement("option");
+            option.value = prj.title;
+            option.textContent = prj.title;
+            option.setAttribute("data-id", prj.id);
+            return option;
+        })
+
+        const noProject = document.createElement("option");
+        noProject.value = "no-project";
+        noProject.textContent = "No project";
+        noProject.setAttribute("data-id", "no-project");
+        options.unshift(noProject);
+
+        console.log(options);
+        select.append(...options);
+    }
+
+    function resetPrjOptions(select) {
+        select.replaceChildren();
+        console.log("project options are reset");
+    }
+
     function closeDialog(dialog, reset) {
         dialog.close();
     }
@@ -131,10 +173,11 @@ export const Render = (function() {
     function renderTask(tasksContainer, taskObj) {
         const task = document.createElement("div");
         task.classList.add("task");
+        task.classList.add(taskObj.priority);
 
         let project = "";
-        if (typeof taskObj === 'string') {
-            project = taskObj
+        if (typeof taskObj.project === 'string') {
+            project = taskObj.project;
         }   else {
             project = "";
         }
@@ -148,7 +191,7 @@ export const Render = (function() {
                 </div>
                 <div class="details">
                     <div class="date"><span class="icon"></span>${taskObj.dueDate}</div>
-                    <div class="checklist"><span class="icon"></span></div> 
+                    <div class="checklist"><span class="icon"></span>${taskObj.subtasksDoneLength}/${taskObj.subtasksLength}</div> 
                 </div>
             </div>
 
@@ -164,6 +207,15 @@ export const Render = (function() {
         tasksContainer.appendChild(task);
     }
 
+    function rerenderTasksOnProjectUpdate(tasksContainer, oldTitle, updatedProject) {
+        tasksContainer.querySelectorAll(".task").forEach(taskEl => {
+            const fromEl = taskEl.querySelector(".from");
+            if (fromEl && fromEl.textContent === oldTitle) {
+                fromEl.textContent = updatedProject.title;
+            }
+        });
+    }
+
     return {
         renderSidebar,
         toggleSidebar,
@@ -173,10 +225,13 @@ export const Render = (function() {
         resetNewTaskDialog,
         renderSubtaskList,
         renderTask,
+        renderPrjOptions,
+        resetPrjOptions,
         renderPrjColorOption,
         updatePrjColorOption,
         resetNewPrjDialog,
         renderTabPrj,
         updateTabPrj,
+        rerenderTasksOnProjectUpdate,
     }
 })();

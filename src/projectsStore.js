@@ -19,5 +19,10 @@ export const ProjectsStore = {
     update(id, changes) {
         const project = this.getById(id);
         if (project) Object.assign(project, changes);
+    },
+
+    delete(project) {
+        const index = this.projects.indexOf(project);
+        this.projects.splice(index, 1);
     }
 }
