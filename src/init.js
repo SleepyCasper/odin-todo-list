@@ -43,7 +43,7 @@ export const Init = (function(){
         const task1 = new Task (
             "Buy groceries",
             "",
-            "2026-03-05",
+            new Date(),
             "p1",
             [],
             null,
@@ -53,7 +53,7 @@ export const Init = (function(){
         const task2 = new Task (
             "Clean living room",
             "",
-            "2026-03-05",
+            new Date(),
             "p2",
             [],
             projectHome.title,
@@ -64,16 +64,20 @@ export const Init = (function(){
         TasksStore.add(task2);
         projectHome.tasks.push(task2);
 
-        Render.renderTask(tasksContainer, task1);
-        Render.renderTask(tasksContainer, task2);
         Render.renderTabPrj(listProjects, projectHome);
     }
 
-    function run(allTabs, heading, listProjects, tasksContainer) {
+    function run(heading, listProjects, tasksContainer) {
         demoProjects(listProjects);
         demoTasks(tasksContainer, listProjects);
+        const allTabs = document.querySelectorAll(".tab-list");
         activeTabByDefault(allTabs);
         Render.renderHeading(heading);
+        allTabs.forEach(tab => {
+            Render.renderCounters(tab);
+        });
+        const activeTab = document.querySelector(".tab-list.active");
+        Render.renderTasksByTabs(activeTab);
     }
 
     return {

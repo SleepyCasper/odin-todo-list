@@ -42,14 +42,15 @@ export const elements = {
         btnDelete: document.getElementById("btn-delete-project-delete"),
     },
     body: document.querySelector("body"),
-    projects: document.querySelectorAll(".project"),
+    projects: document.querySelectorAll("li.project"),
     counters: document.querySelectorAll(".counter"),
     sidebar: document.querySelector(".sidebar"),
     heading: document.getElementById("heading"),
     tasks: document.getElementById("tasks-container"),
 }
 
-export const allTabs = [...Object.values(elements.tabs), ...elements.projects];
+// export const allTabs = [...Object.values(elements.tabs), ...elements.projects];
+export const allTabs = document.querySelectorAll(".tab-list");
 export const allNewTaskInputs = [
     elements.formNewTask.inputTitle,
     elements.formNewTask.inputDesc,

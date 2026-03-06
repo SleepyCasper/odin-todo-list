@@ -8,6 +8,7 @@ export class Task {
 
         this.title = title;
         this.desc = desc;
+        /* this.dueDate = dueDate instanceof Date ? dueDate : (dueDate ? new Date(dueDate + "T00:00:00") : null); */
         this.dueDate = dueDate;
         this.priority = priority;
         if (subtasks) {
@@ -22,16 +23,16 @@ export class Task {
             this.project = project;
             this.projectID = projectID;
         }
+        this.done = false;
     }
 
     get id() { return this.#id; }
 
     get subtasksLength() {
-        return this.subtasks.length;
+        return this.subtasks.length ?? 0;
     }
 
     get subtasksDoneLength() {
-        let doneSubtasks = this.subtasks.filter( subtask => subtask.done === true);
-        return doneSubtasks.length;
+        return this.subtasks?.filter(s => s.done).length ?? 0;
     }
 } 

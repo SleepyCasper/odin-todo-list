@@ -6,7 +6,7 @@ import { ProjectsStore } from "./projectsStore.js";
 
 export const EventHandler = {
     init() {
-        // Change active tabs in sidebar
+        // Change active tabs in sidebar and render tasks
         document.querySelector(".sidebar").addEventListener("click", (e) => {
             const tabItem = e.target.closest(".tab-list");
             if (!tabItem) return;
@@ -15,6 +15,7 @@ export const EventHandler = {
             tabItem.classList.add("active");
             sessionStorage.setItem("activeTab", tabItem.dataset.id);
             Render.renderHeading(elements.heading);
+            Render.renderTasksByTabs(tabItem);
         });
 
         // Details project button event listener:
@@ -86,8 +87,16 @@ export const EventHandler = {
 
         // Close prj details dialog 
         document.addEventListener("click", (e) => {
-            if (!e.target.closest(".project .details") && !e.target.closest(".btn-details")) {
-                 document.querySelectorAll(".project .details").forEach(d => d.style.display = "none");
+            const clickedDetailsBtn = e.target.closest(".btn-details");
+            const clickedInsideDetails = e.target.closest(".project .details");
+
+            // Always hide all windows first
+            document.querySelectorAll(".project .details").forEach(d => d.style.display = "none");
+
+            // If a btn-details was clicked, re-open only its own details window
+            if (clickedDetailsBtn && !clickedInsideDetails) {
+                const detailsWindow = clickedDetailsBtn.nextElementSibling;
+                detailsWindow.style.display = "flex";
             }
         })
 
@@ -108,6 +117,30 @@ export const EventHandler = {
         // Show new project dialog
         elements.buttons.newProject.addEventListener("click", () => elements.formNewProject.dialog.showModal());
 
+        // Completing tasks
+        elements.tasks.addEventListener("click", (e) => {
+            const checkbox = e.target.closest(".checkbox");
+            if(!checkbox) {return};
+            const taskCard = checkbox.closest(".task");
+            const taskObj = TasksStore.getById(taskCard.id);
+
+            taskCard.remove();
+            TasksStore.update(taskObj.id, {done:true});
+
+            if (taskObj.projectID) {
+                const project = ProjectsStore.getById(taskObj.projectID);
+                const li = document.querySelector(`[data-id="${taskObj.projectID}"]`);
+                // ! probably needs reworking
+                project.tasks = project.tasks.filter(t => t.id !== taskObj.id);
+                Render.updateTabPrj(li, project);
+            }
+            // Re-render counters on tabs
+            const tabs = document.querySelectorAll(".list-up > ul .tab-list");
+            tabs.forEach(tab => {
+                Render.renderCounters(tab);
+            })
+            console.log(TasksStore.getAll());
+        })
 
         // NEW TASK DIALOG
 
@@ -139,7 +172,8 @@ export const EventHandler = {
         elements.formNewTask.form.addEventListener("submit", (e) => {
             e.preventDefault();
             const newTask = createNewTask();
-            Render.renderTask(elements.tasks, newTask);
+            Render.renderTask(newTask);
+            allTabs.forEach(tab => Render.renderCounters(tab));
             Render.closeDialog(elements.formNewTask.dialog, Render.resetNewTaskDialog(allNewTaskInputs, elements.formNewTask.listSubtasks));
             Render.resetPrjOptions(elements.formNewTask.selectProject);
         
@@ -197,7 +231,7 @@ export const EventHandler = {
             
                 const li = document.querySelector(`[data-id="${editingProjectId}"]`);
                 Render.updateTabPrj(li, ProjectsStore.getById(editingProjectId)); // re-render the li
-                Render.rerenderTasksOnProjectUpdate(elements.tasks, oldTitle, updatedProject); // re-render the task card
+                Render.rerenderTasksOnProjectUpdate(oldTitle, updatedProject); // re-render the task card
                 editingProjectId = null;
             } else {
                 // CREATE new project

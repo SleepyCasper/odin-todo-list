@@ -1,5 +1,9 @@
 import { capitalizeFirstLetter, uncapitalizeFirstLetter } from "./util.js";
+import { elements } from "./elements.js";
 import { ProjectsStore } from "./projectsStore.js";
+import { TasksStore } from "./tasksStore.js";
+import { formatDates } from "./util.js";
+import { isToday, isFuture, isPast, format, isTomorrow, isWithinInterval, addDays } from "date-fns";
 
 export const Render = (function() {
     function renderSidebar(element, allElements) {
@@ -170,10 +174,14 @@ export const Render = (function() {
         `
     }
 
-    function renderTask(tasksContainer, taskObj) {
+    function renderTask(taskObj) {
+        const tasksContainer = elements.tasks;
         const task = document.createElement("div");
+        task.id = taskObj.id;
         task.classList.add("task");
         task.classList.add(taskObj.priority);
+
+        let date = formatDates(taskObj.dueDate);
 
         let project = "";
         if (typeof taskObj.project === 'string') {
@@ -190,7 +198,7 @@ export const Render = (function() {
                     <p class="desc">${taskObj.desc}</p>
                 </div>
                 <div class="details">
-                    <div class="date"><span class="icon"></span>${taskObj.dueDate}</div>
+                    <div class="date"><span class="icon"></span>${date}</div>
                     <div class="checklist"><span class="icon"></span>${taskObj.subtasksDoneLength}/${taskObj.subtasksLength}</div> 
                 </div>
             </div>
@@ -207,13 +215,79 @@ export const Render = (function() {
         tasksContainer.appendChild(task);
     }
 
-    function rerenderTasksOnProjectUpdate(tasksContainer, oldTitle, updatedProject) {
+    function resetTaskContainer() {
+        elements.tasks.innerHTML = "";
+    }
+
+    function renderTasksByTabs(tab) {
+        let tabId = tab.id;
+        let tasks = TasksStore.getAll();
+
+        if(tabId) {
+            switch (tabId) {
+                case "tab-all": 
+                    tasks = tasks.filter(task => !task.done);
+                    break;
+
+                case "tab-today":
+                    tasks = tasks.filter(task => isToday(task.dueDate) && !task.done);
+                    break;
+
+                case "tab-upcoming":
+                    tasks = tasks.filter(task => isFuture(task.dueDate) && !task.done);
+                    break;
+
+                case "tab-completed":
+                    tasks = tasks.filter(task => task.done);
+                    break;
+            }
+        } else {
+            let tabDataId = tab.getAttribute("data-id");
+            tasks = tasks.filter(task => task.projectID === tabDataId && !task.done);
+        }
+
+        resetTaskContainer()
+        tasks.forEach(task => renderTask(task));
+    }
+
+    function rerenderTasksOnProjectUpdate(oldTitle, updatedProject) {
+        const tasksContainer = elements.tasks;
         tasksContainer.querySelectorAll(".task").forEach(taskEl => {
             const fromEl = taskEl.querySelector(".from");
             if (fromEl && fromEl.textContent === oldTitle) {
                 fromEl.textContent = updatedProject.title;
             }
         });
+    }
+
+    function renderCounters(tab) {
+        const tabId = tab.id;
+        const counter = tab.querySelector(".counter");
+        if (!counter) return;
+        let count = 0;
+        switch (tabId) {
+            case "tab-all":
+                count = counter.textContent = TasksStore.tasks.filter(task => task.done == false).length;
+                break;
+
+            case "tab-completed":
+                count = counter.textContent = TasksStore.tasks.filter(task => task.done == true).length;
+                break;
+            
+            case "tab-today":
+                count = counter.textContent = TasksStore.tasks.filter(task => isToday(task.dueDate) && !task.done).length;
+                break;
+            case "tab-upcoming":
+                count = counter.textContent = TasksStore.tasks.filter(task => isFuture(task.dueDate) && !task.done).length;
+                break;
+            default: // project tabs
+                const tabDataId = tab.getAttribute("data-id");
+                count = TasksStore.tasks.filter(task => task.projectID === tabDataId && !task.done).length;
+                break;
+        }
+
+        counter.textContent = count;
+        counter.style.display = count === 0 ? "none" : "block";
     }
 
     return {
@@ -233,5 +307,7 @@ export const Render = (function() {
         renderTabPrj,
         updateTabPrj,
         rerenderTasksOnProjectUpdate,
+        renderTasksByTabs,
+        renderCounters,
     }
 })();

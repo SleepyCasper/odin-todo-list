@@ -1,7 +1,8 @@
 :root {
    --light: hsl(0, 0%, 100%);
+   --light200: hsl(27, 0%, 98%);
    --light-hover: hsl(27, 0%, 94%);
-   --dark: hsl(240, 3%, 15%);
+   --dark: hsl(0, 0%, 10%);
    --accent-orange: hsl(27, 100%, 43%);
    
    --p1: hsl(4, 61.98%, 52.55%);
@@ -19,7 +20,7 @@
 
    --prj-blue: hsl(226, 70%, 60%);
    --prj-cyan: hsl(178, 64%, 60%);
-   --prj-yellow: hsl(58, 70%, 60%);
+   --prj-yellow: hsl(54, 81%, 57%);
    --prj-red: hsl(0, 70%, 60%);
    --prj-green: hsl(123, 70%, 60%);
    --prj-purple: hsl(280, 70%, 60%);
@@ -40,8 +41,9 @@
 }
 
 :root.dark {
-   --light: hsl(240, 5%, 15%);
-   --light-hover: hsl(240, 5%, 18%);
+   --light: hsl(0, 0%, 10%);
+   --light200: hsl(0, 0%, 12%);
+   --light-hover: hsl(0, 0%, 16%);
    --dark: hsl(0, 0%, 100%);
    --accent-orange: hsl(27, 100%, 43%);
 
@@ -51,6 +53,7 @@
    --p4-bg: hsl(0, 1%, 29%);
 
    --light-active: hsl(27, 70%, 14%);
+   --border-grey: hsl(27, 5%, 60%);
 
    --text-grey: hsl(0, 0%, 85%);
    --box-shadow: 0 0 12px 1px hsl(0, 0%, 9%);

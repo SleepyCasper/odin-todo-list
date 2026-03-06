@@ -18,6 +18,7 @@ export function createNewProject() {
 
 export function createNewTask() {
     const formData = new FormData(elements.formNewTask.form);
+
     const subtasks = [...elements.formNewTask.listSubtasks.querySelectorAll("li")]
         .map(li => ({
             text: li.querySelector("label").textContent,

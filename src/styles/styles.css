@@ -112,7 +112,8 @@ html.dark :is(.list-down button,
 
 html.dark :is(.active .tab .icon:not(.project .icon),
 .btn-sidebar:hover,
-.project.active .btn-details) {
+.project.active .btn-details,
+.task .right button:hover) {
     filter: var(--filter-icon-orange);
 }
 
@@ -193,12 +194,12 @@ nav {
     position: relative;
     grid-row: 1 / 2;
     height: 100vh;
-    background-color: var(--light);
+    background-color: var(--light200);
     padding: 0.8rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    border-right: 1.5px solid var(--border-grey);
+    /* border-right: 1.5px solid var(--border-grey); */
 }
 
 main {
