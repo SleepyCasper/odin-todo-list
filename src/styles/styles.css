@@ -93,6 +93,10 @@ summary {
 }
 
 /*////////////////////////////////////////////////////////*/
+:root {
+    interpolate-size: allow-keywords;
+}
+
 * {
     /* outline: 1px solid red; */
 }
@@ -552,7 +556,26 @@ nav.collapsed {
     min-width: 45ch;
     padding: 1rem 0.6rem;
     cursor: pointer;
+    overflow: hidden;
+    transition: 
+        height 0.4s 0.4s ease, 
+        opacity 0.4s 0.4s ease, 
+        padding 0.4s 0.4s ease, 
+        border 0.4s 0.4s ease;
+    
 }
+
+.task.deleting {
+    height: 0;
+    opacity: 0;
+    padding: 0;
+    border: none;
+}
+
+.task.completed {
+    filter: grayscale(1);
+}
+
 
 .task .left {
     margin-right: auto;
@@ -560,10 +583,19 @@ nav.collapsed {
 
 .task .text {
     margin-bottom: 1.2rem;
+    text-decoration: line-through;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.4s ease-in-out;
 }
 
-.task h3 {
+.task .title {
     margin-bottom: 0.4rem;
+}
+
+.task.completed .text,
+.task.deleting .text {
+    text-decoration-color: var(--text-grey);
+    color: var(--text-grey);
 }
 
 .task p,
@@ -572,6 +604,7 @@ nav.collapsed {
 }
 
 .task .from {
+    margin-top: auto;
     font-size: 0.9rem;
 }
 
@@ -604,6 +637,7 @@ nav.collapsed {
 }
 
 .task button.checkbox {
+    position: relative;
     width: 1.2rem;
     height: 1.2rem;
     border: 2px solid var(--_color);
@@ -612,23 +646,44 @@ nav.collapsed {
     margin: 0.3rem 0.6rem;
 }
 
-.task button.checkbox:hover {
+.task button.checkbox::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
     background-size: 85%;
+    background-position: center;
+    opacity: 0;
+    z-index: 5;
 }
 
-.task.p1 button.checkbox:hover {
+.task.completed button.checkbox::after {
+    opacity: 1;
+}
+
+.task button.checkbox:hover::after {
+    opacity: 1;
+}
+
+.task.completed button.checkbox:hover::after {
+    opacity: 0;
+}
+
+.task.p1 button.checkbox::after {
     background-image: url(../media/icons/check-p1.svg);
 }
 
-.task.p2 button.checkbox:hover {
+.task.p2 button.checkbox::after {
     background-image: url(../media/icons/check-p2.svg);
 }
 
-.task.p3 button.checkbox:hover {
+.task.p3 button.checkbox::after {
     background-image: url(../media/icons/check-p3.svg);
 }
 
-.task.p4 button.checkbox:hover {
+.task.p4 button.checkbox::after {
     background-image: url(../media/icons/check-p4.svg);
 }
 
@@ -667,6 +722,10 @@ nav.collapsed {
     opacity: 0;
 }
 
+.task.completed .buttons {
+    display: none;
+}
+
 .task:hover .buttons {
     opacity: 1;
 }
@@ -683,3 +742,4 @@ nav.collapsed {
 .task .btn-delete {
     background-image: url(../media/icons/delete.svg);
 }
+

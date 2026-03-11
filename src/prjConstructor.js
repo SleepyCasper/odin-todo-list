@@ -4,18 +4,15 @@ export class Project {
     constructor(title, color, tasks, id) {
         this.title = title;
         this.color = color;
-        if (tasks) {
-            this.tasks = tasks ?? [];
-            this.counter = this.tasks.length;
-        } else { this.tasks = null;
-                this.counter = null;
-            } ;
+        this.tasks = tasks ?? [];
         if (id) {
             this.#id = id;
         } else {
             this.#id = crypto.randomUUID();
         }
     }
+
+    get counter() { return this.tasks ? this.tasks.length : 0; }
 
     get id() { return this.#id; };
 }

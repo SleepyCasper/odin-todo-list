@@ -78,6 +78,7 @@ export const Init = (function(){
         });
         const activeTab = document.querySelector(".tab-list.active");
         Render.renderTasksByTabs(activeTab);
+        console.log(ProjectsStore.getProjects());
     }
 
     return {

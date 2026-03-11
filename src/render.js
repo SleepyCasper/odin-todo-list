@@ -29,7 +29,7 @@ export const Render = (function() {
                 </g>
                 </svg>
             </span>${newProject.title}</a>
-            <div class="counter">${newProject.tasks.length}</div>
+            <div class="counter">${newProject.counter}</div>
             <button class="btn-details" type="button"></button>
             <div class="details">
                 <div class="btn-edit"><span class="icon"></span>Edit</div>
@@ -37,7 +37,7 @@ export const Render = (function() {
             </div>        `
         listProjects.appendChild(project);
 
-        if (newProject.tasks.length === 0) {
+        if (newProject.counter === 0) {
             project.querySelector(".counter").style = "opacity: 0";
         }
     }
@@ -180,6 +180,9 @@ export const Render = (function() {
         task.id = taskObj.id;
         task.classList.add("task");
         task.classList.add(taskObj.priority);
+        if (taskObj.done) {
+            task.classList.add("completed");
+        }
 
         let date = formatDates(taskObj.dueDate);
 
