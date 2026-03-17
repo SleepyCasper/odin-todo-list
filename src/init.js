@@ -3,6 +3,7 @@ import { Project } from "./prjConstructor.js";
 import { Task } from "./taskConstructor.js";
 import { ProjectsStore } from "./projectsStore.js";
 import { TasksStore } from "./tasksStore.js";
+import { sort, filter } from "./util.js";
 
 export const Init = (function(){
     function activeTabByDefault(allTabs) {
@@ -70,15 +71,18 @@ export const Init = (function(){
     function run(heading, listProjects, tasksContainer) {
         demoProjects(listProjects);
         demoTasks(tasksContainer, listProjects);
+
         const allTabs = document.querySelectorAll(".tab-list");
         activeTabByDefault(allTabs);
         Render.renderHeading(heading);
         allTabs.forEach(tab => {
             Render.renderCounters(tab);
         });
+
+        sort("date", "ascending");
+        
         const activeTab = document.querySelector(".tab-list.active");
-        Render.renderTasksByTabs(activeTab);
-        console.log(ProjectsStore.getProjects());
+        Render.renderTasksByTabs(activeTab, "all", "all");
     }
 
     return {

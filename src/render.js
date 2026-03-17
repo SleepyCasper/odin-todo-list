@@ -2,7 +2,7 @@ import { capitalizeFirstLetter, uncapitalizeFirstLetter } from "./util.js";
 import { elements } from "./elements.js";
 import { ProjectsStore } from "./projectsStore.js";
 import { TasksStore } from "./tasksStore.js";
-import { formatDates } from "./util.js";
+import { formatDates, filter } from "./util.js";
 import { isToday, isFuture, isPast, format, isTomorrow, isWithinInterval, addDays } from "date-fns";
 
 export const Render = (function() {
@@ -81,8 +81,49 @@ export const Render = (function() {
 
     function renderHeading(heading) {
        let activeTab = document.querySelector(".tab-list.active > .tab");
-       /* console.log(activeTab.textContent); */
        return heading.textContent = activeTab.textContent;
+    }
+
+    function renderSortFilter(btn) {
+        switch(btn.id) {
+            case "btn-sort" :
+                document.getElementById("sort").style.display = "flex";
+                break;
+            case "btn-filter" :
+                document.getElementById("filter").style.display = "flex";
+                break;
+        }
+    }
+
+    function renderFilterSubselect(action) {
+        resetFilterSubselect();
+        switch(action) {
+            case "project":
+                const projects = ProjectsStore.getProjects();
+                projects.forEach(prj => {
+                    const option = document.createElement("option");
+                    option.value = prj.id;
+                    option.textContent = prj.title;
+                    elements.filter.subSelect.appendChild(option);
+                })
+                break;
+            case "priority":
+                const priorities = ["p1", "p2", "p3", "p4"];
+                
+                priorities.forEach(p => {
+                    const option = document.createElement("option");
+                    option.value = p;
+                    option.textContent = `Priority ${p[1]}`;
+                    elements.filter.subSelect.appendChild(option);
+                })
+                break;
+        }
+    }
+
+    function resetFilterSubselect () {
+        elements.filter.subSelect.innerHTML = `
+        <option value="all">All</option>
+        `
     }
 
     function toggleSidebar(sidebar, btn) {
@@ -130,6 +171,23 @@ export const Render = (function() {
         list.appendChild(subtask);
     }
 
+    function renderExistingSubtaskList(task) {
+        if (task.subtasks) {
+            task.subtasks.forEach(sub => {
+                const subtask = document.createElement("li");
+                subtask.innerHTML = `
+                    <div class="checkbox-wrapper">
+                        <input class="default-checkbox" type="checkbox" id="${sub.id}">
+                        <div class="custom-checkbox"></div>
+                    </div>
+                    <label for="${sub.id}">${sub.text}</label>
+                    <button type="button" class="btn-delete-subtask"></button>
+                `
+                elements.formNewTask.listSubtasks.appendChild(subtask);
+            });
+        } else return;
+    }
+
     function renderPrjOptions (select) {
         const projects = ProjectsStore.getProjects();
         console.log("Projects array:", projects);
@@ -163,7 +221,10 @@ export const Render = (function() {
 
     function resetNewTaskDialog(inputs, list) {
         inputs.forEach(input => input.value="");
+        elements.formNewTask.selectPriority.value = "p1"
         list.replaceChildren();
+        elements.formNewTask.heading.textContent = "New task";
+        elements.formNewTask.btnCreate.textContent = "Create";
     }
 
     function resetNewPrjDialog(inputs, select) {
@@ -172,6 +233,7 @@ export const Render = (function() {
             <span class="icon" style="background-color: var(--prj-black)"></span>
             <span class="text">Black</span>
         `
+        elements.formNewProject.customList.classList.remove("expanded");
     }
 
     function renderTask(taskObj) {
@@ -197,7 +259,7 @@ export const Render = (function() {
             <button type="button" class="checkbox"></button>
             <div class="left">
                 <div class="text">
-                    <h3 class="title">${taskObj.title}<h3>
+                    <h3 class="title">${taskObj.title}</h3>
                     <p class="desc">${taskObj.desc}</p>
                 </div>
                 <div class="details">
@@ -216,41 +278,56 @@ export const Render = (function() {
 
         `
         tasksContainer.appendChild(task);
+        console.log(task);
     }
 
     function resetTaskContainer() {
         elements.tasks.innerHTML = "";
     }
 
-    function renderTasksByTabs(tab) {
+    function renderTasksByTabs(tab, filterState, subValue) {
         let tabId = tab.id;
+        let tabDataId = tab.getAttribute("data-id");
         let tasks = TasksStore.getAll();
+        let filteredTasks;
 
         if(tabId) {
             switch (tabId) {
                 case "tab-all": 
                     tasks = tasks.filter(task => !task.done);
+                    console.log("Tasks in active tab:", tasks);
                     break;
 
                 case "tab-today":
                     tasks = tasks.filter(task => isToday(task.dueDate) && !task.done);
+                    console.log("Tasks in active tab:", tasks);
                     break;
 
                 case "tab-upcoming":
                     tasks = tasks.filter(task => isFuture(task.dueDate) && !task.done);
+                    console.log("Tasks in active tab:", tasks);
                     break;
 
                 case "tab-completed":
                     tasks = tasks.filter(task => task.done);
+                    console.log("Tasks in active tab:", tasks);
                     break;
             }
         } else {
-            let tabDataId = tab.getAttribute("data-id");
             tasks = tasks.filter(task => task.projectID === tabDataId && !task.done);
+            console.log("Tasks in active tab:", tasks);
         }
 
+        // Filter
+        if (filterState) {
+            filteredTasks = filter(tasks, filterState, subValue);
+        }
+        
+        /* console.log(filterState);
+        console.log(subValue);
+        console.log(tabId || tabDataId); */
         resetTaskContainer()
-        tasks.forEach(task => renderTask(task));
+        filteredTasks.forEach(task => renderTask(task));
     }
 
     function rerenderTasksOnProjectUpdate(oldTitle, updatedProject) {
@@ -291,6 +368,7 @@ export const Render = (function() {
 
         counter.textContent = count;
         counter.style.display = count === 0 ? "none" : "block";
+        counter.style.opacity = count === 0 ? "0" : "1";
     }
 
     return {
@@ -298,9 +376,13 @@ export const Render = (function() {
         toggleSidebar,
         toggleTheme,
         renderHeading,
+        renderSortFilter,
+        renderFilterSubselect,
+        resetFilterSubselect,
         closeDialog,
         resetNewTaskDialog,
         renderSubtaskList,
+        renderExistingSubtaskList,
         renderTask,
         renderPrjOptions,
         resetPrjOptions,

@@ -63,7 +63,7 @@
                 <label for="input-task-date"><span class="icon"></span>Due Date:</label>
                 <input type="date" name="date" id="input-task-date" required>
                 <label for="select-task-p"><span class="icon"></span>Priority</label>
-                <select name="priority" id="input-task-p">
+                <select name="priority" id="select-task-p">
                     <option value="p1">Priority 1</option>
                     <option value="p2">Priority 2</option>
                     <option value="p3">Priority 3</option>
@@ -143,70 +143,61 @@
         </form>
     </dialog>
 
-    <dialog class="delete-project" id="dialog-delete-project">
-        <p>Are you sure you want to delete the project and all tasks within?</p>
+    <dialog class="delete-project delete" id="dialog-delete-project">
+        <p>Are you sure you want to delete <span></span> and all tasks within?</p>
         <div class="buttons">
             <button class="white" id="btn-delete-project-cancel" type="button">Cancel</button>
             <button class="orange" id="btn-delete-project-delete" type="button">Delete</button>
         </div>  
     </dialog>
 
+    <dialog id="dialog-delete-task">
+        <p>Are you sure you want to delete this task?</p>
+        <div class="buttons">
+            <button class="white" id="btn-delete-task-cancel" type="button">Cancel</button>
+            <button class="orange" id="btn-delete-task-delete" type="button">Delete</button>
+        </div>  
+    </dialog>
+    
     <main>
         <div class="header">
             <h2 class="heading" id="heading"></h2>
             <div class="buttons">
                 <button type="button" class="btn-new-task orange"><span class="icon"></span> <span class="text">New task</span></button>
-                <button type="button" class="btn-sort white"><span class="icon"></span><span class="text">Sort</span></button>
-                <button type="button" class="btn-filter white"><span class="icon"></span><span class="text">Filter</span></button>
+                <button type="button" class="btn-sort white" id="btn-sort"><span class="icon"></span><span class="text">Sort</span></button>
+                <div class="sort" id="sort">
+                    <div class="wrapper">
+                        <label for="select-sort">Sort by</label>
+                        <select name="sort" id="select-sort">
+                            <option value="date">Date</option>
+                            <option value="name">Name</option>
+                            <option value="priority">Priority</option>
+                        </select>
+                        <button type="button" class="btn-sort-order" id="btn-sort-order"><span class="icon"></span></button>
+                    </div>
+                </div>
+                <button type="button" class="btn-filter white" id="btn-filter"><span class="icon"></span><span class="text">Filter</span></button>
+                <div class="filter" id="filter">
+                    <div class="wrapper">
+                        <label for="select-filter">Filter by</label>
+                        <select name="filter" id="select-filter">
+                            <option value="all">All</option>
+                            <option value="project">Project</option>
+                            <option value="priority">Priority</option>
+                        </select>
+                    </div>
+
+                    <div class="wrapper subselect">
+                        <select name="sub-filter" id="sub-filter">
+                            <option value="all">All</option>
+                        </select>
+                    </div>
+                </div>
                 <button type="button" class="toggle-theme light" id="btn-toggle-theme"></button>
             </div>
         </div>
         <div class="tasks" id="tasks-container">
-            <!-- <div class="task p1"> -->
-                <!-- <button type="button" class="checkbox"></button> -->
-                <!-- <div class="left"> -->
-                    <!-- <div class="text"> -->
-                        <!-- <h3 class="title">Task 1</h3> -->
-                        <!-- <p class="desc">Description of task</p> -->
-                    <!-- </div> -->
-                    <!-- <div class="details"> -->
-                        <!-- <div class="date"><span class="icon"></span>Today</div> -->
-                        <!-- <div class="checklist"><span class="icon"></span>1/3</div> -->
-                    <!-- </div> -->
-                <!-- </div> -->
-<!--  -->
-                <!-- <div class="right"> -->
-                    <!-- <div class="buttons"> -->
-                        <!-- <button type="button" class="btn-edit"></button> -->
-                        <!-- <button type="button" class="btn-delete"></button> -->
-                    <!-- </div> -->
-                    <!-- <div class="from">Studying</div> -->
-                <!-- </div> -->
-<!--  -->
-            <!-- </div> -->
-<!--  -->
-            <!-- <div class="task p2"> -->
-                <!-- <button type="button" class="checkbox"></button> -->
-                <!-- <div class="left"> -->
-                    <!-- <div class="text"> -->
-                        <!-- <h3 class="title">Task 2</h3> -->
-                        <!-- <p class="desc"></p> -->
-                    <!-- </div> -->
-                    <!-- <div class="details"> -->
-                        <!-- <div class="date"><span class="icon"></span>Feb 10</div> -->
-                        <!-- <div class="checklist"><span class="icon"></span>1/3</div> -->
-                    <!-- </div> -->
-                <!-- </div> -->
-<!--  -->
-                <!-- <div class="right"> -->
-                    <!-- <div class="buttons"> -->
-                        <!-- <button type="button" class="btn-edit"></button> -->
-                        <!-- <button type="button" class="btn-delete"></button> -->
-                    <!-- </div> -->
-                    <!-- <div class="from"></div> -->
-                <!-- </div> -->
-<!--  -->
-            <!-- </div> -->
+            
         </div>
     </main>
 </body>

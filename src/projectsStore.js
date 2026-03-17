@@ -24,5 +24,10 @@ export const ProjectsStore = {
     delete(project) {
         const index = this.projects.indexOf(project);
         this.projects.splice(index, 1);
+    },
+
+    deleteTask(project, task) {
+        const index = project.tasks.indexOf(task);
+        project.tasks.splice(index, 1);
     }
 }

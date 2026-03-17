@@ -398,7 +398,7 @@ nav.collapsed {
 }
 
 .project:hover .counter {
-    opacity: 0;
+    opacity: 0 !important;
 }
 
 .project .details {
@@ -457,6 +457,7 @@ nav.collapsed {
 }
 
 .header .buttons {
+    position: relative;
     display: flex;
     gap: 1rem;
     align-self: center;
@@ -467,7 +468,7 @@ nav.collapsed {
     align-self: center;
 }
 
-.header button:not(.toggle-theme) {
+.header button:not(.toggle-theme, .btn-asc-desc) {
     display: inline;
     display: flex;
     gap: 0.4rem;
@@ -511,6 +512,55 @@ nav.collapsed {
 .header .btn-filter .icon {
     background-image: url(../media/icons/filter.svg);
     filter: var(--filter-icon-orange);
+}
+
+.sort,
+.filter {
+    position: absolute;
+    display: none;
+    background-color: var(--light);
+    box-shadow: var(--box-shadow);
+    border-radius: 0.5rem;
+    top: 3rem;
+    width: 90%;
+    height: 4rem;
+    padding: 1rem;
+    z-index: 10;
+}
+
+.filter {
+    gap: 0.6rem;
+}
+
+.filter .subselect {
+    max-width: 8rem;
+}
+
+.sort .wrapper,
+.filter .wrapper {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 0.6rem;
+}
+
+.sort select,
+.filter select {
+    cursor: pointer;
+    flex: 1;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-grey);
+    padding: 0.4rem;
+}
+
+.btn-sort-order .icon {
+    background-image: url(../media/icons/ascending.svg);
+    display: block;
+}
+
+.btn-sort-order.descending .icon {
+    background-image: url(../media/icons/descending.svg);
 }
 
 @container header-container (max-width: 560px) {

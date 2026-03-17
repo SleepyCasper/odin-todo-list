@@ -8,8 +8,8 @@ export class Task {
 
         this.title = title;
         this.desc = desc;
-        /* this.dueDate = dueDate instanceof Date ? dueDate : (dueDate ? new Date(dueDate + "T00:00:00") : null); */
-        this.dueDate = dueDate;
+        this.dueDate = dueDate instanceof Date ? dueDate : new Date(dueDate + "T00:00:00");
+        /* this.dueDate = dueDate; */
         this.priority = priority;
         if (subtasks) {
             this.subtasks = subtasks;
