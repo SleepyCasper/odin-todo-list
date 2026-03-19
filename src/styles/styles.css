@@ -107,6 +107,7 @@ html {
 
 html.dark :is(.list-down button,
             .sidebar .icon:not(.project .icon),
+            .sort .icon,
             .btn-sidebar,
             .task .right button,
             .project .details .icon,
@@ -154,7 +155,7 @@ li {
 
 input[type="checkbox"] {
     position: absolute;
-    inset: 0.3rem 0;
+    inset: 0.25rem 0;
     opacity: 0;
     width: 1rem;
     height: 1rem;
@@ -185,6 +186,10 @@ button.white:hover {
 button.orange {
     background-color: var(--accent-orange);
     color: white;
+}
+
+button.orange:hover {
+    background-color: hsl(27, 100%, 36%);
 }
 
 .icon {
@@ -549,8 +554,6 @@ nav.collapsed {
 .filter select {
     cursor: pointer;
     flex: 1;
-    border-radius: 0.5rem;
-    border: 1px solid var(--border-grey);
     padding: 0.4rem;
 }
 
@@ -571,6 +574,35 @@ nav.collapsed {
     .header button:not(.toggle-theme) {
         width: 2.4rem;
         padding: 0;
+    }
+
+    .sort,
+    .filter {
+        height: max-content;
+    }
+
+    .sort .wrapper,
+    .filter  .wrapper {
+        flex-wrap: wrap;
+    }
+
+    .sort label,
+    .filter label {
+        flex: 1;
+        min-width: 100%;
+    }
+
+    .sort select {
+        width: max-content;
+    }
+
+    .filter {
+        flex-wrap: wrap;
+    }
+
+    .filter .wrapper {
+        flex-wrap: wrap;
+        min-width: 100%;
     }
 }
 
@@ -605,7 +637,6 @@ nav.collapsed {
     border-bottom: 1px solid var(--border-grey);
     min-width: 45ch;
     padding: 1rem 0.6rem;
-    cursor: pointer;
     overflow: hidden;
     transition: 
         height 0.4s 0.4s ease, 
@@ -628,18 +659,20 @@ nav.collapsed {
 
 
 .task .left {
-    margin-right: auto;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .task .text {
-    margin-bottom: 1.2rem;
     text-decoration: line-through;
     text-decoration-color: transparent;
     transition: text-decoration-color 0.4s ease-in-out;
 }
 
 .task .title {
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.6rem;
 }
 
 .task.completed .text,
@@ -674,6 +707,36 @@ nav.collapsed {
     display: flex;
     align-items: center;
     gap: 0.3rem;
+}
+
+.task .checklist {
+    display: none;
+    cursor: pointer;
+    padding: 0.4rem;
+    background-color: var(--light);
+    border-radius: 0.4rem;
+    border: solid 1.5px var(--accent-orange);
+}
+
+.task .checklist:hover {
+    background-color: var(--light-hover);
+}
+
+.task .checklist.active {
+    background-color: var(--light-active);
+}
+
+.task .checklist.visible {
+    display: flex;
+}
+
+.task .subtasks {
+    display: none;
+}
+
+.task .subtasks.expanded {
+    height: max-content;
+    display: block;
 }
 
 .task .date .icon {

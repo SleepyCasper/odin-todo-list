@@ -282,6 +282,12 @@ export const EventHandler = {
             const checkbox = e.target.closest(".checkbox");
             const btnEdit = e.target.closest(".btn-edit");
             const btnDelete = e.target.closest(".btn-delete");
+            const checklist = e.target.closest(".checklist");
+
+            if (checklist) {
+                checklist.classList.toggle("active");
+                this._handleSubtasks(e);
+            }
 
             // Complete task
             if (checkbox) {
@@ -329,6 +335,37 @@ export const EventHandler = {
         }
 
         this._refreshGlobalCounters();
+    },
+
+    _handleSubtasks(e) {
+        const taskCard = e.target.closest(".task");
+        if (!taskCard) return;
+
+        const task = TasksStore.getById(taskCard.id);
+        const domSubtasks = taskCard.querySelector(".subtasks");
+        const subtasks = task.subtasks;
+        this.editingTaskId = task.id;
+
+        domSubtasks.classList.toggle("expanded");
+        Render.renderSubtasksInCard(domSubtasks, subtasks);
+
+        domSubtasks.querySelectorAll("input[type='checkbox']").forEach(checkbox => {
+            checkbox.addEventListener("change", () => {
+                const li = checkbox.closest("li");
+                const label = li.querySelector("label");
+                const subtask = TasksStore.getSubtaskById(checkbox.id)
+                
+                label.classList.toggle("checked");
+                
+                if(checkbox.checked) {
+                    subtask.done = true;
+                } else { subtask.done = false };
+
+                Render.updateSubtaskChecklist(taskCard, task);
+            })
+        })
+
+        this.editingTaskId = null;
     },
 
     _setupTaskEdit (e) {

@@ -48,7 +48,9 @@ form textarea {
 
 form input,
 form select,
-form textarea {
+form textarea,
+.sort select,
+.filter select {
     background-color: var(--light);
     color: var(--dark);
     padding: var(--input-padding);
@@ -61,12 +63,16 @@ form textarea {
 form input:hover,
 form select:hover,
 form textarea:hover,
+.sort select:hover,
+.filter select:hover, 
 #btn-dropdown-custom:hover {
     border-color: var(--border-grey);
 }
 
 form input:focus,
 form select:focus,
+.sort select:focus,
+.filter select:focus, 
 form textarea:focus {
     border-color: var(--accent-orange);
     outline: none;
@@ -120,7 +126,9 @@ form textarea:focus {
     display: flex;
     gap: 0.3rem;
     margin-top: 0.4rem;
+    height: 1.5rem;
     align-items: center;
+    justify-content: center;
     cursor: default;
 }
 
@@ -144,7 +152,7 @@ form textarea:focus {
 .custom-checkbox {
     cursor: pointer;
     position: absolute;
-    inset: 0.3em 0;
+    inset: 0.25rem 0;
     width: 1em;
     height: 1em;
     border: 2px solid var(--text-grey);

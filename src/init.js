@@ -56,7 +56,18 @@ export const Init = (function(){
             "",
             new Date(),
             "p2",
-            [],
+            [
+                {
+                    text: "Take out the trash",
+                    done: false,
+                    id: crypto.randomUUID()
+                },
+                {
+                    text: "Vacuum cleaning",
+                    done: false,
+                    id: crypto.randomUUID()
+                }
+            ],
             projectHome.title,
             projectHome.id
         )

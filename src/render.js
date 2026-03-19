@@ -177,10 +177,10 @@ export const Render = (function() {
                 const subtask = document.createElement("li");
                 subtask.innerHTML = `
                     <div class="checkbox-wrapper">
-                        <input class="default-checkbox" type="checkbox" id="${sub.id}">
+                        <input class="default-checkbox" type="checkbox" id="${sub.id}" ${sub.done ? "checked" : ""}>
                         <div class="custom-checkbox"></div>
                     </div>
-                    <label for="${sub.id}">${sub.text}</label>
+                    <label for="${sub.id}" class="${sub.done ? "checked" : ""}">${sub.text}</label>
                     <button type="button" class="btn-delete-subtask"></button>
                 `
                 elements.formNewTask.listSubtasks.appendChild(subtask);
@@ -248,12 +248,9 @@ export const Render = (function() {
 
         let date = formatDates(taskObj.dueDate);
 
-        let project = "";
-        if (typeof taskObj.project === 'string') {
-            project = taskObj.project;
-        }   else {
-            project = "";
-        }
+        const project = typeof taskObj.project === 'string' ? taskObj.project : "";
+
+        const checklistClass = taskObj.subtasksLength > 0 ? "checklist visible" : "checklist";
 
         task.innerHTML = `
             <button type="button" class="checkbox"></button>
@@ -262,9 +259,16 @@ export const Render = (function() {
                     <h3 class="title">${taskObj.title}</h3>
                     <p class="desc">${taskObj.desc}</p>
                 </div>
+
+                <div class="subtasks">
+                    <p>Subtasks</p>
+                    <ul class="list-subtasks">
+                    </ul>
+                </div>
+
                 <div class="details">
                     <div class="date"><span class="icon"></span>${date}</div>
-                    <div class="checklist"><span class="icon"></span>${taskObj.subtasksDoneLength}/${taskObj.subtasksLength}</div> 
+                    <div class="${checklistClass}"><span class="icon"></span>${taskObj.subtasksDoneLength}/${taskObj.subtasksLength}</div> 
                 </div>
             </div>
 
@@ -279,6 +283,31 @@ export const Render = (function() {
         `
         tasksContainer.appendChild(task);
         console.log(task);
+    }
+
+    function renderSubtasksInCard(div, subtasks) {
+        const ulSubtasks = div.querySelector("ul");
+        ulSubtasks.innerHTML = "";
+
+        subtasks.forEach(sub => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <div class="checkbox-wrapper">
+                    <input class="default-checkbox" type="checkbox" id="${sub.id}" ${sub.done ? "checked" : ""}>
+                    <div class="custom-checkbox"></div>
+                </div>
+                <label for="${sub.id}" class="${sub.done ? "checked" : ""}">${sub.text}</label>
+            `
+            ulSubtasks.appendChild(li);
+        })
+    }
+
+    function updateSubtaskChecklist(task, taskObj) {
+        const checklist = task.querySelector(".checklist");
+
+        checklist.innerHTML = `
+            <span class="icon"></span>${taskObj.subtasksDoneLength}/${taskObj.subtasksLength}
+        `
     }
 
     function resetTaskContainer() {
@@ -384,6 +413,8 @@ export const Render = (function() {
         renderSubtaskList,
         renderExistingSubtaskList,
         renderTask,
+        renderSubtasksInCard,
+        updateSubtaskChecklist,
         renderPrjOptions,
         resetPrjOptions,
         renderPrjColorOption,

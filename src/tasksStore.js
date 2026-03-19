@@ -18,6 +18,14 @@ export const TasksStore = {
         return tasks = this.tasks.filter(task => task.projectID === prjID);
     },
 
+    getSubtaskById(id) {
+        for (const task of this.tasks) {
+            const subtask = task.subtasks?.find(sub => sub.id === id);
+            if (subtask) return subtask;
+        }
+        return null;
+    },
+
     delete(task) {
         const index = this.tasks.indexOf(task);
         this.tasks.splice(index, 1);

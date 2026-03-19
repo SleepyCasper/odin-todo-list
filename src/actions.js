@@ -22,7 +22,8 @@ export function createNewTask() {
     const subtasks = [...elements.formNewTask.listSubtasks.querySelectorAll("li")]
         .map(li => ({
             text: li.querySelector("label").textContent,
-            done: li.querySelector("input").checked
+            done: li.querySelector("input").checked,
+            id: crypto.randomUUID(),
         }));
     
     const projectID = elements.formNewTask.selectProject.selectedOptions[0]?.dataset.id ?? null;
