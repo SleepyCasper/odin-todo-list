@@ -720,7 +720,7 @@ nav.collapsed {
 .list-down .projects {
     scrollbar-width: none;
     -ms-overflow-style: none;
-    max-height: 16rem;
+    max-height: 15rem;
     overflow-y: auto;
 }
 
@@ -783,9 +783,6 @@ nav.collapsed {
 
 .project .details {
     display: none;
-    position: absolute;
-    top: 2.6rem;
-    right: 0;
     flex-direction: column;
     height: 5rem;
     width: 7rem;
@@ -1228,4 +1225,4 @@ nav.collapsed {
 
 
 
-/*# sourceMappingURL=main.eda11ffba0a2dc85d27e.css.map*/
+/*# sourceMappingURL=main.c571f4da6c5129453f09.css.map*/
