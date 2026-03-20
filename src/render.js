@@ -194,7 +194,6 @@ export const Render = (function() {
 
     function renderPrjOptions (select) {
         const projects = ProjectsStore.getAll();
-        console.log("Projects array:", projects);
 
         const options = projects.map(prj => {
             const option = document.createElement("option");
@@ -210,13 +209,11 @@ export const Render = (function() {
         noProject.setAttribute("data-id", "no-project");
         options.unshift(noProject);
 
-        console.log(options);
         select.append(...options);
     }
 
     function resetPrjOptions(select) {
         select.replaceChildren();
-        console.log("project options are reset");
     }
 
     function closeDialog(dialog, reset) {
@@ -289,7 +286,6 @@ export const Render = (function() {
 
         `
         tasksContainer.appendChild(task);
-        console.log(task);
     }
 
     function renderSubtasksInCard(div, subtasks) {
@@ -333,27 +329,22 @@ export const Render = (function() {
             switch (tabId) {
                 case "tab-all": 
                     tasks = tasks.filter(task => !task.done);
-                    console.log("Tasks in active tab:", tasks);
                     break;
 
                 case "tab-today":
                     tasks = tasks.filter(task => isToday(task.dueDate) && !task.done);
-                    console.log("Tasks in active tab:", tasks);
                     break;
 
                 case "tab-upcoming":
                     tasks = tasks.filter(task => isFuture(task.dueDate) && !task.done);
-                    console.log("Tasks in active tab:", tasks);
                     break;
 
                 case "tab-completed":
                     tasks = tasks.filter(task => task.done);
-                    console.log("Tasks in active tab:", tasks);
                     break;
             }
         } else {
             tasks = tasks.filter(task => task.projectID === tabDataId && !task.done);
-            console.log("Tasks in active tab:", tasks);
         }
 
         // Filter
@@ -361,9 +352,6 @@ export const Render = (function() {
             filteredTasks = filter(tasks, filterState, subValue);
         }
         
-        /* console.log(filterState);
-        console.log(subValue);
-        console.log(tabId || tabDataId); */
         resetTaskContainer()
         filteredTasks.forEach(task => renderTask(task));
     }

@@ -39,15 +39,12 @@ export function sort(action, order) {
   switch (action) {
     case "date":
       tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-      console.log(tasks);
       break;
     case "name":
       tasks.sort((a, b) => a.title.localeCompare(b.title));
-      console.log(tasks);
       break;
     case "priority":
       tasks.sort((a, b) => a.priority.localeCompare(b.priority));
-      console.log(tasks);
       break;
   }
 

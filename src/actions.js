@@ -42,7 +42,5 @@ export function createNewTask() {
     if (project) project.tasks.push(newTask);
 
     TasksStore.add(newTask);
-    console.log(TasksStore.getAll());
-    console.log(ProjectsStore.getAll());
     return newTask;
 }

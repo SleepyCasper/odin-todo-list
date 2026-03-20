@@ -6,7 +6,6 @@ export const TasksStore = {
     add(task) {
         this.tasks.push(task);
         Storage.saveTask(task);
-        console.log(localStorage.getItem("tasks"));
     },
 
     getAll() {

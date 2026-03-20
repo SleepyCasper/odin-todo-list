@@ -200,7 +200,6 @@ export const EventHandler = {
 
     _setColorValue(option) {
         elements.formNewProject.inputColorHidden.value = option.getAttribute("data-value");
-        console.log(elements.formNewProject.inputColorHidden.value);
     },
 
     _processProjectUpdate() {
@@ -216,7 +215,6 @@ export const EventHandler = {
 
         //Update project name in tasks
         const tasks = TasksStore.getByPrjID(id);
-        console.log(tasks);
         tasks.forEach(task => {
             TasksStore.update(task.id, {project: formData.get("title")});
         })
@@ -412,7 +410,6 @@ export const EventHandler = {
             ProjectsStore.deleteTask(project, task);
             taskCard.remove();
             this._refreshGlobalCounters(project, task);
-            console.log(project);
 
             elements.deleteTask.dialog.close();
             this.editingTaskId = null;
@@ -537,9 +534,6 @@ export const EventHandler = {
             projectID: projectID === "no-project" ? null : projectID,
             subtasks: subtasks
         });
-
-        console.log("Project", formData.get("project"));
-        console.log("Task:", TasksStore.getById(this.editingTaskId));
     },
 
     // 6. Sidebar & Theme buttons
