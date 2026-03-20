@@ -1,4 +1,4 @@
-import { Project } from "./prjConstructor";
+import { Storage } from "./storage";
 
 export const ProjectsStore = {
     projects: [
@@ -6,9 +6,10 @@ export const ProjectsStore = {
 
     add(project) {
         this.projects.push(project);
+        Storage.saveProject(project);
     },
 
-    getProjects() {
+    getAll() {
         return this.projects;
     },
 
@@ -19,15 +20,18 @@ export const ProjectsStore = {
     update(id, changes) {
         const project = this.getById(id);
         if (project) Object.assign(project, changes);
+        Storage.saveProject(project);
     },
 
     delete(project) {
         const index = this.projects.indexOf(project);
         this.projects.splice(index, 1);
+        Storage.deleteProject(project);
     },
 
     deleteTask(project, task) {
         const index = project.tasks.indexOf(task);
         project.tasks.splice(index, 1);
+        Storage.saveProject(project);
     }
 }

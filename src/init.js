@@ -4,6 +4,8 @@ import { Task } from "./taskConstructor.js";
 import { ProjectsStore } from "./projectsStore.js";
 import { TasksStore } from "./tasksStore.js";
 import { sort, filter } from "./util.js";
+import { Storage} from "./storage.js";
+import { elements } from "./elements.js";
 
 export const Init = (function(){
     function activeTabByDefault(allTabs) {
@@ -14,10 +16,23 @@ export const Init = (function(){
         }
         if (tab) {
         Render.renderSidebar(tab, allTabs);
-    }
+        }
     }
 
-    function demoProjects(listProjects) {
+    function setTheme() {
+        const savedTheme = localStorage.getItem("theme");
+        
+        if (savedTheme === "dark") {
+            document.documentElement.classList.add("dark");  // ← add this
+            elements.buttons.toggleTheme.classList.add("dark");
+            elements.buttons.toggleTheme.classList.remove("light");
+        } else {
+            elements.buttons.toggleTheme.classList.add("light");
+            elements.buttons.toggleTheme.classList.remove("dark");
+        }
+    }
+
+    function demoProjects() {
         const project1 = new Project (
             "Studying",
             "pink",
@@ -34,12 +49,9 @@ export const Init = (function(){
 
         ProjectsStore.add(project1);
         ProjectsStore.add(project2);
-
-        Render.renderTabPrj(listProjects, project1);
-        /* Render.renderTabPrj(listProjects, project2); */
     }
 
-    function demoTasks(tasksContainer, listProjects) {  
+    function demoTasks() {  
         const projectHome = ProjectsStore.projects.find(prj => prj.title === "Home");
         const task1 = new Task (
             "Buy groceries",
@@ -75,23 +87,41 @@ export const Init = (function(){
         TasksStore.add(task1);
         TasksStore.add(task2);
         projectHome.tasks.push(task2);
-
-        Render.renderTabPrj(listProjects, projectHome);
     }
 
-    function run(heading, listProjects, tasksContainer) {
-        demoProjects(listProjects);
-        demoTasks(tasksContainer, listProjects);
+    function run() {
+        setTheme();
 
+        // Importing form local storage
+        const hasTasks = Object.keys(localStorage).some(key => key.startsWith("tasks:"));
+        const hasProjects = Object.keys(localStorage).some(key => key.startsWith("projects:"));
+
+        if(hasProjects) {
+            Storage.importProjects();
+        } else {
+            demoProjects();
+        }
+
+        if(hasTasks) {
+            Storage.importTasks();
+        } else {
+            demoTasks();
+        }
+
+        ProjectsStore.getAll().forEach(prj => Render.renderTabPrj(prj));
+        
+        // Setting active tab
         const allTabs = document.querySelectorAll(".tab-list");
         activeTabByDefault(allTabs);
-        Render.renderHeading(heading);
+        Render.renderHeading(elements.heading);
         allTabs.forEach(tab => {
             Render.renderCounters(tab);
         });
 
+        // Sorting tasks
         sort("date", "ascending");
         
+        // Rendering tasks
         const activeTab = document.querySelector(".tab-list.active");
         Render.renderTasksByTabs(activeTab, "all", "all");
     }

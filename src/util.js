@@ -1,7 +1,5 @@
-import { isToday, isFuture, isPast, format, isTomorrow, isWithinInterval, addDays } from "date-fns";
+import { isToday, format, isTomorrow, isWithinInterval, addDays } from "date-fns";
 import { TasksStore } from "./tasksStore";
-import { elements } from "./elements";
-import { Render } from "./render";
 
 export function capitalizeFirstLetter(string) {
   if (string.length === 0) {
@@ -84,7 +82,7 @@ export function filter(tasks, filterState, subValue) {
   return tasks;
 }
 
-function filterByProject (tasks, subValue) { //! not subvalue
+function filterByProject (tasks, subValue) {
   return tasks = tasks.filter(task => task.projectID === subValue);
 }
 

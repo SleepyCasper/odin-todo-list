@@ -1,9 +1,9 @@
-import { capitalizeFirstLetter, uncapitalizeFirstLetter } from "./util.js";
+import { capitalizeFirstLetter} from "./util.js";
 import { elements } from "./elements.js";
 import { ProjectsStore } from "./projectsStore.js";
 import { TasksStore } from "./tasksStore.js";
 import { formatDates, filter } from "./util.js";
-import { isToday, isFuture, isPast, format, isTomorrow, isWithinInterval, addDays } from "date-fns";
+import { isToday, isFuture} from "date-fns";
 
 export const Render = (function() {
     function renderSidebar(element, allElements) {
@@ -12,7 +12,7 @@ export const Render = (function() {
         sessionStorage.setItem("activeTab", element.dataset.id || element.id);
     }
 
-    function renderTabPrj(listProjects, newProject) {
+    function renderTabPrj(newProject) {
         const project = document.createElement("li");
         project.classList.add("tab-list");
         project.classList.add("project");
@@ -35,7 +35,7 @@ export const Render = (function() {
                 <div class="btn-edit"><span class="icon"></span>Edit</div>
                 <div class="btn-delete"><span class="icon"></span>Delete</div>
             </div>        `
-        listProjects.appendChild(project);
+        elements.tabProjects.appendChild(project);
 
         if (newProject.counter === 0) {
             project.querySelector(".counter").style = "opacity: 0";
@@ -99,7 +99,7 @@ export const Render = (function() {
         resetFilterSubselect();
         switch(action) {
             case "project":
-                const projects = ProjectsStore.getProjects();
+                const projects = ProjectsStore.getAll();
                 projects.forEach(prj => {
                     const option = document.createElement("option");
                     option.value = prj.id;
@@ -148,10 +148,14 @@ export const Render = (function() {
             document.documentElement.classList.toggle("dark");
             btn.classList.add("dark");
             btn.classList.remove("light");
+
+            localStorage.setItem("theme", "dark");
         } else {
             document.documentElement.classList.toggle("dark");
             btn.classList.add("light");
             btn.classList.remove("dark");
+
+            localStorage.setItem("theme", "light");
         }
         
     }
@@ -189,7 +193,7 @@ export const Render = (function() {
     }
 
     function renderPrjOptions (select) {
-        const projects = ProjectsStore.getProjects();
+        const projects = ProjectsStore.getAll();
         console.log("Projects array:", projects);
 
         const options = projects.map(prj => {
@@ -239,6 +243,9 @@ export const Render = (function() {
     function renderTask(taskObj) {
         const tasksContainer = elements.tasks;
         const task = document.createElement("div");
+        const subtasksLength = taskObj.subtasks?.length ?? 0;
+        const subtasksDoneLength = taskObj.subtasks?.filter(s => s.done).length ?? 0;
+
         task.id = taskObj.id;
         task.classList.add("task");
         task.classList.add(taskObj.priority);
@@ -250,7 +257,7 @@ export const Render = (function() {
 
         const project = typeof taskObj.project === 'string' ? taskObj.project : "";
 
-        const checklistClass = taskObj.subtasksLength > 0 ? "checklist visible" : "checklist";
+        const checklistClass = subtasksLength > 0 ? "checklist visible" : "checklist";
 
         task.innerHTML = `
             <button type="button" class="checkbox"></button>
@@ -268,7 +275,7 @@ export const Render = (function() {
 
                 <div class="details">
                     <div class="date"><span class="icon"></span>${date}</div>
-                    <div class="${checklistClass}"><span class="icon"></span>${taskObj.subtasksDoneLength}/${taskObj.subtasksLength}</div> 
+                    <div class="${checklistClass}"><span class="icon"></span>${subtasksDoneLength}/${subtasksLength}</div> 
                 </div>
             </div>
 
@@ -304,9 +311,11 @@ export const Render = (function() {
 
     function updateSubtaskChecklist(task, taskObj) {
         const checklist = task.querySelector(".checklist");
+        const subtasksLength = taskObj.subtasks?.length ?? 0;
+        const subtasksDoneLength = taskObj.subtasks?.filter(s => s.done).length ?? 0;
 
         checklist.innerHTML = `
-            <span class="icon"></span>${taskObj.subtasksDoneLength}/${taskObj.subtasksLength}
+            <span class="icon"></span>${subtasksDoneLength}/${subtasksLength}
         `
     }
 

@@ -1,4 +1,4 @@
-import { elements, allTabs, allNewTaskInputs, allNewPrjInputs } from "./elements";
+import { elements} from "./elements";
 import { ProjectsStore } from "./projectsStore.js";
 import { TasksStore } from "./tasksStore.js";
 import { Task } from "./taskConstructor.js";
@@ -43,6 +43,6 @@ export function createNewTask() {
 
     TasksStore.add(newTask);
     console.log(TasksStore.getAll());
-    console.log(ProjectsStore.getProjects());
+    console.log(ProjectsStore.getAll());
     return newTask;
 }

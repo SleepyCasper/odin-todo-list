@@ -25,13 +25,20 @@ export class Task {
         this.done = false;
     }
 
+    toJSON() {
+        return {
+            id: this.#id,
+            dateAdded: this.#dateAdded,
+            title: this.title,
+            desc: this.desc,
+            dueDate: this.dueDate,
+            priority: this.priority,
+            subtasks: this.subtasks,
+            project: this.project,
+            projectID: this.projectID,
+            done: this.done,
+        };
+    }
+
     get id() { return this.#id; }
-
-    get subtasksLength() {
-        return this.subtasks.length ?? 0;
-    }
-
-    get subtasksDoneLength() {
-        return this.subtasks?.filter(s => s.done).length ?? 0;
-    }
 } 

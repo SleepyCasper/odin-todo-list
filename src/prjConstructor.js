@@ -12,6 +12,15 @@ export class Project {
         }
     }
 
+    toJSON() {
+        return {
+            id: this.#id,
+            title: this.title,
+            color: this.color,
+            tasks: this.tasks,
+        };
+    }
+
     get counter() { return this.tasks ? this.tasks.length : 0; }
 
     get id() { return this.#id; };

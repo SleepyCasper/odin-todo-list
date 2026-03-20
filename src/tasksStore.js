@@ -1,8 +1,12 @@
+import { Storage } from "./storage";
+
 export const TasksStore = {
     tasks: [],
 
     add(task) {
         this.tasks.push(task);
+        Storage.saveTask(task);
+        console.log(localStorage.getItem("tasks"));
     },
 
     getAll() {
@@ -29,10 +33,14 @@ export const TasksStore = {
     delete(task) {
         const index = this.tasks.indexOf(task);
         this.tasks.splice(index, 1);
+        Storage.deleteTask(task);
     },
 
     update(id, changes) {
         const task = this.getById(id);
-        if (task) Object.assign(task, changes);
+        if (task) {
+            Object.assign(task, changes);
+            Storage.saveTask(task);
+        }
     }
 }

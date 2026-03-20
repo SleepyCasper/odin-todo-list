@@ -5,8 +5,7 @@ import { createNewTask, createNewProject } from "./actions.js";
 import { TasksStore } from "./tasksStore.js";
 import { ProjectsStore } from "./projectsStore.js";
 import { isToday, isFuture } from "date-fns";
-import { Task } from "./taskConstructor.js";
-
+import { Storage} from "./storage.js";
 
 export const EventHandler = {
     editingProjectId: null,
@@ -208,12 +207,12 @@ export const EventHandler = {
         const formData = new FormData(elements.formNewProject.form);
         const id = this.editingProjectId;
         const oldTitle = ProjectsStore.getById(this.editingProjectId).title;
+
         ProjectsStore.update(id, {
             title: formData.get("title"),
             color: formData.get("project-color"),
         });
-        console.log("Project color:", formData.get("project-color"))
-        console.log("OLD project title:", oldTitle);
+        
 
         //Update project name in tasks
         const tasks = TasksStore.getByPrjID(id);
@@ -232,7 +231,7 @@ export const EventHandler = {
 
     _processProjectCreate() {
         const newPrj = createNewProject();
-        Render.renderTabPrj(elements.tabProjects, newPrj);
+        Render.renderTabPrj(newPrj);
     },
 
     _closeAndResetProjectForm() {
@@ -252,6 +251,7 @@ export const EventHandler = {
 
             tasks.forEach(task => TasksStore.delete(task)); // delete tasks of the project
             ProjectsStore.delete(project); // delete project
+
             tabPrj.remove(); // delete li element
 
             allTabs.forEach(tab => Render.renderCounters(tab)); // rerender tab counters
@@ -297,7 +297,6 @@ export const EventHandler = {
             // Edit task
             if (btnEdit) {
                 this._setupTaskEdit(e);
-                
             }
             
             // Delete task
@@ -313,23 +312,24 @@ export const EventHandler = {
         const taskCard = checkbox.closest(".task");
         const taskObj = TasksStore.getById(taskCard.id);
 
-        taskCard.classList.add("deleting");
+        const newDoneState = !taskObj.done;
+        TasksStore.update(taskObj.id, { done: newDoneState });
 
-        // UI Animation
-        await new Promise(res => {
-            taskCard.addEventListener("transitionend", (e) => {
-                if (e.propertyName === "height") {
-                    res();
-                }
+        if (newDoneState) {
+            // Completing
+            taskCard.classList.add("deleting");
+
+            await new Promise(res => {
+                taskCard.addEventListener("transitionend", (e) => {
+                    if (e.propertyName === "height") res();
+                });
             });
-        });
-
+        } else {
+            // Undoing:
+            taskCard.classList.remove("completed");
+        }
         taskCard.remove();
 
-        // Data Update
-        TasksStore.update(taskObj.id, { done: true });
-
-        // If part of a project, sync the project view
         if (taskObj.projectID) {
             this._syncProjectView(taskObj.projectID);
         }
@@ -350,6 +350,12 @@ export const EventHandler = {
         Render.renderSubtasksInCard(domSubtasks, subtasks);
 
         domSubtasks.querySelectorAll("input[type='checkbox']").forEach(checkbox => {
+            // Disable checkboxes if task is done
+            if (task.done) {
+                checkbox.disabled = true;
+                return;
+            }
+
             checkbox.addEventListener("change", () => {
                 const li = checkbox.closest("li");
                 const label = li.querySelector("label");
@@ -361,6 +367,7 @@ export const EventHandler = {
                     subtask.done = true;
                 } else { subtask.done = false };
 
+                Storage.saveTask(task);
                 Render.updateSubtaskChecklist(taskCard, task);
             })
         })
@@ -472,7 +479,6 @@ export const EventHandler = {
                 this._syncProjectView(task.projectID);
             }
 
-            /* this._refreshProjectCounters(); */
             this._closeAndResetTaskForm();
             this._refreshGlobalCounters();
             this.editingTaskId = null;
@@ -543,8 +549,9 @@ export const EventHandler = {
             Render.toggleSidebar(elements.sidebar, elements.buttons.sidebar));
 
         // Theme Toggle
-        elements.buttons.toggleTheme.addEventListener("click", () => 
-            Render.toggleTheme(elements.buttons.toggleTheme));
+        elements.buttons.toggleTheme.addEventListener("click", (e) => {
+            Render.toggleTheme(e.target);
+        })
 
         // Calling sort and filter
         elements.buttons.sort.addEventListener("click", (e) => Render.renderSortFilter(e.target));
