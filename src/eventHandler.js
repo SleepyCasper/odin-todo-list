@@ -46,6 +46,14 @@ export const EventHandler = {
                 Render.renderTasksByTabs(tabItem, this.filterState, this.subValue);
             }
         });
+
+        elements.tabProjects.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            e.currentTarget.scrollBy({
+                top: e.deltaY > 0 ? 40 : -40,
+                behavior: "smooth"
+            });
+        }, { passive: false });
     },
 
     // Sorting tasks
@@ -141,7 +149,13 @@ export const EventHandler = {
 
             // Details toggle
             if (target.closest(".btn-details")) {
+                const btn = target.closest(".btn-details");
+                const rect = btn.getBoundingClientRect();
                 const win = target.closest(".btn-details").nextElementSibling;
+
+                win.style.position = "fixed";
+                win.style.top = rect.bottom + 10 + "px";
+                win.style.left = rect.left - 90 + "px";
                 win.style.display = "flex";
             }
         });
